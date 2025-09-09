@@ -6,6 +6,9 @@ h1{
     font-family: Marker Felt;
     font-size: 45px;
     letter-spacing: 5px;
+    text-align: center;
+
+    
 }
 
 h2{
@@ -14,6 +17,7 @@ h2{
     font-family: Marker Felt;
     font-size: 15px;
     letter-spacing: 5px;
+    text-align: center;
 }
 
 
