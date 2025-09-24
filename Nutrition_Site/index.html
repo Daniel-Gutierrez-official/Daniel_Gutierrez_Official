@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nutrition & Digestion Quiz</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  .question { margin-bottom: 15px; }
+  .option { display: block; margin: 5px 0; padding: 8px; background: #f0f0f0; border: none; width: 100%; text-align: left; cursor: pointer; }
+  .option:hover { background: #ddd; }
+  .feedback { font-weight: bold; margin-top: 10px; }
+  button { margin-top: 10px; padding: 10px 15px; }
+</style>
+</head>
+<body>
+
+<h1>Nutrition & Digestion Multiple Choice Quiz</h1>
+<div id="quiz-container"></div>
+<div id="score-container"></div>
+
+<script>
+// Questions array
+const questions = [
+  {q:"What is the primary fuel for the brain?", options:["Protein","Fat","Glucose","Ketones"], answer:"Glucose"},
+  {q:"Define nutrition.", options:["Science of digestion only","Science of food and how the body uses it for growth, maintenance, and health","Study of exercise","Study of vitamins only"], answer:"Science of food and how the body uses it for growth, maintenance, and health"},
+  {q:"Define RDAs (Recommended Dietary Allowances).", options:["Maximum nutrient limits","Average daily nutrient levels to meet nearly all healthy people","Vitamin-only requirements","Daily calorie goals"], answer:"Average daily nutrient levels to meet nearly all healthy people"},
+  {q:"Process of swallowing food involves?", options:["Chewing, tongue pushes bolus, epiglottis closes airway, peristalsis moves food down","Only chewing","Only peristalsis","Only tongue movement"], answer:"Chewing, tongue pushes bolus, epiglottis closes airway, peristalsis moves food down"},
+  {q:"Energy-yielding nutrients include?", options:["Vitamins","Minerals","Carbs, Protein, Fat, Alcohol","Water"], answer:"Carbs, Protein, Fat, Alcohol"},
+  {q:"Nutrient-dense foods example?", options:["Candy","Fruits, vegetables, lean proteins","Soda","French fries"], answer:"Fruits, vegetables, lean proteins"},
+  {q:"Daily Value on Nutrition Facts is based on?", options:["1500 calories","2500 calories","2000 calories","1800 calories"], answer:"2000 calories"},
+  {q:"Poor diet contributes to?", options:["Heart disease, diabetes, obesity, cancer","Cold","Flu","Broken bones"], answer:"Heart disease, diabetes, obesity, cancer"},
+  {q:"Parts of small intestine?", options:["Stomach, colon, rectum","Duodenum, jejunum, ileum","Mouth, esophagus, stomach","Pancreas, liver, gallbladder"], answer:"Duodenum, jejunum, ileum"},
+  {q:"Dietary guidelines reduce risk of?", options:["Chronic diseases like heart disease, diabetes, obesity, certain cancers","Only flu","Only cold","Bone fractures"], answer:"Chronic diseases like heart disease, diabetes, obesity, certain cancers"},
+  {q:"Water-soluble vitamins are?", options:["A,D,E,K","B,C","Iron,Zinc","Calcium, Magnesium"], answer:"B,C"},
+  {q:"Fat-soluble vitamins are?", options:["B,C","A,D,E,K","Vitamin K only","Vitamin B12 only"], answer:"A,D,E,K"},
+  {q:"Where does most digestion occur?", options:["Mouth","Stomach","Small intestine","Large intestine"], answer:"Small intestine"},
+  {q:"Define cross-contamination.", options:["Transfer of harmful microorganisms from one food/surface to another","Mixing vegetables","Cooking meat","Washing fruits"], answer:"Transfer of harmful microorganisms from one food/surface to another"},
+  {q:"Leading cause of peptic ulcer disease?", options:["Stress","Spicy food","Helicobacter pylori infection","Acidic fruits"], answer:"Helicobacter pylori infection"},
+  {q:"Examples of monosaccharides?", options:["Glucose, fructose, galactose","Sucrose, lactose, maltose","Starch, fiber","Protein, fat"], answer:"Glucose, fructose, galactose"},
+  {q:"Functions of fat?", options:["Energy, insulation, hormone synthesis, absorption of fat-soluble vitamins, cell membranes","Only energy","Only insulation","Only digestion"], answer:"Energy, insulation, hormone synthesis, absorption of fat-soluble vitamins, cell membranes"},
+  {q:"Food labeling regulated by?", options:["FDA","USDA","EPA","CDC"], answer:"FDA"},
+  {q:"Temperature danger zone for bacteria growth?", options:["0-32°F","32-40°F","40-140°F","140-200°F"], answer:"40-140°F"},
+  {q:"Goal of RDAs?", options:["Prevent deficiencies and promote optimal health","Treat illness","Increase weight","Increase calories"], answer:"Prevent deficiencies and promote optimal health"},
+  {q:"Factors affecting food choices?", options:["Taste, culture, social influence, cost, convenience, health concerns, advertising","Only taste","Only cost","Only health concerns"], answer:"Taste, culture, social influence, cost, convenience, health concerns, advertising"},
+  {q:"Bacteria spread via coughing/sneezing?", options:["E.coli","Salmonella","Staphylococcus aureus","Listeria"], answer:"Staphylococcus aureus"},
+  {q:"Bottled vs tap water safety?", options:["Tap unsafe","Bottled unsafe","Both safe; tap regulated by EPA, bottled by FDA","Both unsafe"], answer:"Both safe; tap regulated by EPA, bottled by FDA"},
+  {q:"Foods carrying Salmonella?", options:["Raw eggs, poultry, meat, unpasteurized milk, produce","Cooked vegetables only","Bread","Cooked fish only"], answer:"Raw eggs, poultry, meat, unpasteurized milk, produce"},
+  {q:"Nutrition Facts panel components?", options:["Serving size, servings per container, calories, nutrients, %DV","Calories only","Serving size only","Vitamins only"], answer:"Serving size, servings per container, calories, nutrients, %DV"},
+  {q:"Define peristalsis.", options:["Wave-like muscular contractions moving food","Chewing","Swallowing","Mixing food"], answer:"Wave-like muscular contractions moving food"},
+  {q:"Clostridium botulinum develops due to?", options:["Improperly canned/preserved anaerobic foods","Boiling water","Refrigeration","Freezing"], answer:"Improperly canned/preserved anaerobic foods"},
+  {q:"Enzymes in body?", options:["Catalysts like amylase, lipase, protease","Only vitamins","Only minerals","Water"], answer:"Catalysts like amylase, lipase, protease"},
+  {q:"Digestion begins where?", options:["Mouth with salivary amylase","Stomach only","Small intestine only","Large intestine only"], answer:"Mouth with salivary amylase"},
+  {q:"Foods to prevent constipation?", options:["High-fiber foods: whole grains, fruits, vegetables, legumes","Meat","Candy","White bread"], answer:"High-fiber foods: whole grains, fruits, vegetables, legumes"},
+  {q:"Gallbladder removal effect?", options:["Bile released continuously, fat digestion less efficient","No effect","Fat digestion improves","Protein digestion fails"], answer:"Bile released continuously, fat digestion less efficient"},
+  {q:"Secretin function?", options:["Stimulates pancreas to release bicarbonate","Stimulates liver","Stimulates brain","Stimulates gallbladder"], answer:"Stimulates pancreas to release bicarbonate"},
+  {q:"Examples of essential fatty acids?", options:["Linoleic acid (omega-6), alpha-linolenic acid (omega-3)","Saturated fats only","Trans fats only","Cholesterol only"], answer:"Linoleic acid (omega-6), alpha-linolenic acid (omega-3)"},
+  {q:"Controllable heart disease risk factors?", options:["Diet, physical activity, smoking, weight, blood pressure, cholesterol, blood sugar","Age only","Genetics only","None"], answer:"Diet, physical activity, smoking, weight, blood pressure, cholesterol, blood sugar"},
+  {q:"Sucrase function?", options:["Breaks down sucrose into glucose and fructose","Breaks down protein","Breaks down fat","Breaks down starch"], answer:"Breaks down sucrose into glucose and fructose"},
+  {q:"Carbohydrates primary function?", options:["Provide energy","Provide hormones","Provide insulation","Provide vitamins"], answer:"Provide energy"},
+  {q:"Muscle vs liver glycogen usage?", options:["Muscle: exercise; Liver: blood glucose maintenance","Both same","Only liver","Only muscle"], answer:"Muscle: exercise; Liver: blood glucose maintenance"},
+  {q:"Examples of saturated fatty acids?", options:["Butter, cheese, red meat, coconut oil, palm oil","Olive oil, canola oil","Fish oil","Vegetables"], answer:"Butter, cheese, red meat, coconut oil, palm oil"},
+  {q:"Normal blood cholesterol?", options:["<200 mg/dL","200-239 mg/dL","240+ mg/dL","Any value"], answer:"<200 mg/dL"},
+  {q:"Calories per gram of carbohydrates?", options:["4 kcal/g","9 kcal/g","7 kcal/g","1 kcal/g"], answer:"4 kcal/g"},
+  {q:"Primary cause of lactose intolerance?", options:["Lactase enzyme deficiency","Glucose deficiency","Fructose intolerance","Protein deficiency"], answer:"Lactase enzyme deficiency"},
+  {q:"Foods with monounsaturated fatty acids?", options:["Olive oil, canola oil, avocado, nuts, seeds","Butter","Red meat","Sugar"], answer:"Olive oil, canola oil, avocado, nuts, seeds"},
+  {q:"Cholesterol definition?", options:["Waxy fat-like substance found in animal foods and liver, essential for membranes, hormones, bile","Protein","Carb","Vitamin"], answer:"Waxy fat-like substance found in animal foods and liver, essential for membranes, hormones, bile"},
+  {q:"Insulin made where?", options:["Pancreas","Liver","Kidney","Heart"], answer:"Pancreas"},
+  {q:"AHA dietary fat recommendations?", options:["Limit saturated fat <10%, avoid trans fats, replace with unsaturated fats","Eat unlimited fat","Only avoid carbs","Eat only protein"], answer:"Limit saturated fat <10%, avoid trans fats, replace with unsaturated fats"},
+  {q:"Hyperglycemia vs hypoglycemia?", options:["Hyper: high blood glucose; Hypo: low blood glucose","Both high","Both low","No difference"], answer:"Hyper: high blood glucose; Hypo: low blood glucose"},
+  {q:"Diverticula definition?", options:["Small pouches in colon; diverticulosis: presence; diverticulitis: inflammation/infection","Only pouches","Only inflammation","Only colon cancer"], answer:"Small pouches in colon; diverticulosis: presence; diverticulitis: inflammation/infection"},
+  {q:"Food sources of dietary fiber?", options:["Whole grains, fruits, vegetables, legumes, nuts, seeds","Meat","Sugar","Oil"], answer:"Whole grains, fruits, vegetables, legumes, nuts, seeds"},
+  {q:"Main form of dietary lipid?", options:["Triglycerides","Cholesterol","Protein","Starch"], answer:"Triglycerides"},
+  {q:"Ketosis caused by?", options:["Low carbohydrate intake or fasting, body produces ketone bodies","High carb intake","Protein overload","Vitamin deficiency"], answer:"Low carbohydrate intake or fasting, body produces ketone bodies"},
+];
+
+// Shuffle questions
+questions.sort(() => Math.random() - 0.5);
+
+let current = 0;
+let score = 0;
+
+function loadQuestion() {
+  if(current >= questions.length){
+    document.getElementById("quiz-container").innerHTML = `<h2>Quiz Complete!</h2><p>Your score: ${score} / ${questions.length}</p>`;
+    return;
+  }
+
+  const q = questions[current];
+  let html = `<div class="question"><strong>Question ${current + 1}:</strong> ${q.q}</div>`;
+  q.options.forEach(opt => {
+    html += `<button class="option" onclick="checkAnswer('${opt}')">${opt}</button>`;
+  });
+  html += `<div class="feedback" id="feedback"></div>`;
+  document.getElementById("quiz-container").innerHTML = html;
+}
+
+function checkAnswer(selected) {
+  const correct = questions[current].answer;
+  const feedback = document.getElementById("feedback");
+
+  if(selected === correct){
+    feedback.innerHTML = "✅ Correct!";
+    score++;
+  } else {
+    feedback.innerHTML = `❌ Incorrect. Correct answer: ${correct}`;
+  }
+
+  current++;
+  setTimeout(loadQuestion, 1500);
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
