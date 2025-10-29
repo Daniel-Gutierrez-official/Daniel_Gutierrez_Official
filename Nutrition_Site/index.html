@@ -5,119 +5,125 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nutrition Exam 2 — Multiple Choice Review</title>
   <style>
-    body{font-family:Inter,Arial,sans-serif;background:#f9fafb;margin:0;padding:0;color:#111}
-    header{background:#0ea5a4;color:#fff;padding:1rem;text-align:center}
-    main{max-width:900px;margin:2rem auto;padding:1rem;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
-    h1{margin:0;font-size:1.8rem}
-    .question{margin-bottom:1.2rem;padding:1rem;border:1px solid #e2e8f0;border-radius:8px}
-    .question h3{margin:0 0 .5rem 0;font-size:1.1rem}
-    .option{display:block;margin:.4rem 0;padding:.5rem;border:1px solid #ccc;border-radius:6px;cursor:pointer}
-    .option.correct{background:#d1fae5;border-color:#10b981}
-    .option.incorrect{background:#fee2e2;border-color:#ef4444}
-    .actions{text-align:center;margin-top:1.5rem}
-    button{background:#0ea5a4;border:none;color:#fff;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:600}
-    button:hover{background:#0c8b8a}
-    .results{text-align:center;margin-top:2rem;display:none}
-    .results h2{color:#0ea5a4}
+    body{font-family:Inter,Arial,sans-serif;background:#f8fafc;margin:0;padding:0;color:#111;}
+    header{background:#0ea5a4;color:#fff;padding:1rem;text-align:center;}
+    main{max-width:900px;margin:2rem auto;padding:1rem;background:#fff;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
+    h1{margin:0;font-size:1.8rem;}
+    .question{margin-bottom:1.5rem;padding:1rem;border:1px solid #e2e8f0;border-radius:8px;}
+    .question h3{margin:0 0 .5rem 0;font-size:1.1rem;}
+    .options label{display:block;margin:5px 0;cursor:pointer;}
+    button{background:#0ea5a4;border:none;color:#fff;padding:8px 12px;border-radius:6px;cursor:pointer;}
+    button:hover{background:#0c8b8a;}
+    .results{text-align:center;margin-top:2rem;display:none;}
+    .results h2{color:#0ea5a4;}
+    .score{font-size:1.2rem;margin:1rem 0;}
   </style>
 </head>
 <body>
   <header>
     <h1>Nutrition Exam 2 — Multiple Choice Review</h1>
-    <p>Chapters 7–13 • Automatic Scoring Enabled</p>
+    <p>Test yourself on Chapters 7–13</p>
   </header>
   <main id="quiz"></main>
-  <div class="actions"><button id="submitBtn">Submit Answers</button> <button id="restartBtn" style="display:none">Restart</button></div>
-  <div class="results" id="results"></div>
+  <div class="results" id="results">
+    <h2>Your Review Is Complete!</h2>
+    <p class="score" id="scoreText"></p>
+    <button onclick="restartQuiz()">Restart Review</button>
+  </div>
 
   <script>
     const questions = [
-      {q:'What vitamin deficiency causes night blindness?', options:['Vitamin A','Vitamin D','Vitamin C','Vitamin B12'], correct:0},
-      {q:'How many calories are in 1 lb of fat?', options:['3,500','2,500','1,000','4,000'], correct:0},
-      {q:'Which organ metabolizes ethanol?', options:['Liver','Kidney','Stomach','Pancreas'], correct:0},
-      {q:'What is the primary fuel for exercise?', options:['Carbohydrates','Protein','Fat','Alcohol'], correct:0},
-      {q:'Vitamin K is essential for what function?', options:['Blood clotting','Vision','Calcium absorption','Energy metabolism'], correct:0},
-      {q:'How many calories per gram are in alcohol?', options:['7','4','9','0'], correct:0},
-      {q:'What is the control center of satiety?', options:['Hypothalamus','Cerebellum','Thalamus','Brainstem'], correct:0},
-      {q:'Which vitamin deficiency leads to scurvy?', options:['Vitamin C','Vitamin D','Vitamin A','Vitamin B6'], correct:0},
-      {q:'What is the main storage form of glucose?', options:['Glycogen','Fat','Protein','Lactic acid'], correct:0},
-      {q:'Iodine deficiency causes which disorder?', options:['Goiter','Rickets','Scurvy','Anemia'], correct:0},
-      {q:'What nutrient provides 4 kcal/gram?', options:['Protein','Fat','Alcohol','Fiber'], correct:0},
-      {q:'Which organ stores fat-soluble vitamins?', options:['Liver','Kidney','Heart','Lungs'], correct:0},
-      {q:'Marasmus is caused by:', options:['Severe protein-energy malnutrition','Vitamin deficiency','Obesity','Iron overload'], correct:0},
-      {q:'Which vitamin is produced from sunlight exposure?', options:['Vitamin D','Vitamin C','Vitamin E','Vitamin B12'], correct:0},
-      {q:'Which mineral deficiency can cause anemia?', options:['Iron','Zinc','Iodine','Calcium'], correct:0},
-      {q:'How many calories per gram are in protein?', options:['4','7','9','2'], correct:0},
-      {q:'The hypothalamus regulates:', options:['Satiety and hunger','Blood filtration','Digestive enzymes','Hormone secretion only'], correct:0},
-      {q:'Hyponatremia results from:', options:['Low blood sodium','High potassium','Low calcium','Dehydration'], correct:0},
-      {q:'What destroys water-soluble vitamins?', options:['Heat and light','Cold','Freezing','Fermentation'], correct:0},
-      {q:'The basal metabolic rate is usually higher in:', options:['Men','Women','Children','Elderly'], correct:0}
+      {q:'What are the causes of night blindness in alcoholics?', options:['Vitamin A deficiency','Vitamin D deficiency','Iron deficiency','Vitamin C deficiency'], answer:0},
+      {q:'What is the definition of metabolism?', options:['Sum of all chemical reactions in the body','Amount of energy burned','Body mass index','Calories in vs calories out'], answer:0},
+      {q:'Which type of metabolism requires oxygen?', options:['Aerobic','Anaerobic','Catabolic','Anabolic'], answer:0},
+      {q:'What are common results of starvation?', options:['Muscle wasting, nutrient deficiencies','Weight gain','Improved metabolism','Increased energy'], answer:0},
+      {q:'Energy balance occurs when?', options:['Intake equals expenditure','Intake exceeds expenditure','Expenditure exceeds intake','No relation'], answer:0},
+      {q:'Who has higher basal metabolism?', options:['Men','Women','Children','Elderly'], answer:0},
+      {q:'BMI stands for?', options:['Body Mass Index','Basal Metabolic Intake','Blood Mass Indicator','Body Measurement Index'], answer:0},
+      {q:'Calories in 1 lb of fat?', options:['3500 kcal','1000 kcal','500 kcal','7000 kcal'], answer:0},
+      {q:'Define anorexia nervosa.', options:['Self-starvation and fear of weight gain','Excessive overeating','Vitamin deficiency','Muscle wasting'], answer:0},
+      {q:'Why is thermoregulation poor in anorexia nervosa?', options:['Low body fat and slowed metabolism','High metabolism','Dehydration','Excess fat'], answer:0},
+      {q:'Benefits of exercise include?', options:['Heart health, metabolism, mental health','Weight gain','Muscle loss','Dehydration'], answer:0},
+      {q:'Predominant fuel for exercise?', options:['Carbohydrates','Protein','Fat','Alcohol'], answer:0},
+      {q:'Where is glucose stored?', options:['Liver and muscles','Fat tissue','Heart','Blood only'], answer:0},
+      {q:'Carbohydrate loading is for?', options:['Endurance performance','Weight loss','Muscle gain','Sleep improvement'], answer:0},
+      {q:'Fluid consumption during exercise?', options:['Before, during, after','Only after','Only before','Not needed'], answer:0},
+      {q:'Hyponatremia is?', options:['Low blood sodium','High blood potassium','Low calcium','High magnesium'], answer:0},
+      {q:'Conditions associated with alcoholism?', options:['Cirrhosis, neuropathy, vitamin deficiency','Obesity','Diabetes','Hypertension'], answer:0},
+      {q:'Typical American protein intake?', options:['Usually exceeds recommendation','Usually deficient','Perfectly balanced','Unknown'], answer:0},
+      {q:'Amino acids are?', options:['Protein building blocks','Fats','Carbohydrates','Vitamins'], answer:0},
+      {q:'Which organ metabolizes ethanol?', options:['Liver','Kidney','Heart','Pancreas'], answer:0},
+      {q:'Alcohol during pregnancy causes?', options:['Fetal alcohol spectrum disorders','Weight gain','Improved metabolism','Bone growth'], answer:0},
+      {q:'Protein sources include?', options:['Meat, eggs, legumes, dairy','Sugar, candy','Vegetable oil','Bread only'], answer:0},
+      {q:'Fat-soluble vitamins are stored in?', options:['Liver and adipose tissue','Kidney','Muscles','Blood only'], answer:0},
+      {q:'Essential nutrient for blood clotting?', options:['Vitamin K','Vitamin A','Vitamin C','Iron'], answer:0},
+      {q:'Water-soluble vitamins are excreted via?', options:['Urine','Sweat','Feces','Hair'], answer:0},
+      {q:'Vitamin D sources?', options:['Sunlight, fortified foods','Meat only','Citrus fruits','Sugar'], answer:0},
+      {q:'Thiamin therapy treats?', options:['Beriberi, Wernicke–Korsakoff','Scurvy','Rickets','Anemia'], answer:0},
+      {q:'Folate need increases during?', options:['Pregnancy','Exercise','Cold weather','Sleep'], answer:0},
+      {q:'Vitamin D food sources?', options:['Fish, fortified milk, eggs','Fruits','Bread','Sugar'], answer:0},
+      {q:'Vitamin C food sources?', options:['Citrus, peppers, broccoli','Meat','Dairy','Eggs'], answer:0},
+      {q:'Vitamin A deficiency causes?', options:['Night blindness, xerophthalmia','Scurvy','Rickets','Anemia'], answer:0},
+      {q:'Sources of Iron?', options:['Red meat, beans, spinach','Citrus','Milk','Sugar'], answer:0},
+      {q:'Iodide deficiency leads to?', options:['Goiter, cretinism','Night blindness','Rickets','Scurvy'], answer:0},
+      {q:'Sodium amount in salt?', options:['About 40%','10%','60%','100%'], answer:0},
+      {q:'Vitamin C deficiency causes?', options:['Scurvy','Night blindness','Beriberi','Anemia'], answer:0},
+      {q:'Sources of Vitamin B12?', options:['Meat, fish, eggs, milk','Citrus','Vegetables','Grains'], answer:0},
+      {q:'Calories in alcohol?', options:['7 kcal/gram','4 kcal/gram','9 kcal/gram','0 kcal'], answer:0},
+      {q:'Calories in protein?', options:['4 kcal/gram','7 kcal/gram','9 kcal/gram','0 kcal'], answer:0},
+      {q:'Sources of essential amino acids?', options:['Animal or combined plant proteins','Fats','Sugar','Vegetables only'], answer:0},
+      {q:'Define marasmus.', options:['Severe protein-energy malnutrition','Obesity','Dehydration','Vitamin deficiency'], answer:0},
+      {q:'Control center of satiety?', options:['Hypothalamus','Pituitary','Thyroid','Heart'], answer:0},
+      {q:'Total energy expenditure includes?', options:['BMR + activity + thermic effect of food','Only BMR','Only activity','Only thermic effect'], answer:0},
+      {q:'Catabolic metabolism?', options:['Breaking molecules for energy','Building molecules','Storing fat','Excreting waste'], answer:0},
+      {q:'Healthy weight loss strategies?', options:['Balanced diet, portion control, exercise','Fasting only','Skipping meals','Diet pills only'], answer:0},
+      {q:'Sources of Vitamin E?', options:['Nuts, seeds, oils, greens','Meat','Sugar','Bread'], answer:0},
+      {q:'Methods destroying water-soluble vitamins?', options:['Heat, light, water','Freezing only','Salt','Drying'], answer:0},
+      {q:'Sources of Zinc?', options:['Meat, shellfish, legumes, grains','Sugar','Citrus','Vegetables only'], answer:0},
+      {q:'Indications for Vitamin K?', options:['Bleeding disorders, newborn prophylaxis','Night blindness','Scurvy','Rickets'], answer:0},
+      {q:'Ways to lower LDL cholesterol?', options:['Reduce saturated fat, increase fiber, exercise, statins','Eat sugar','Avoid exercise','Increase fat intake'], answer:0},
+      {q:'How to store riboflavin?', options:['Opaque containers away from light','In fridge only','In water','In sunlight'], answer:0}
     ];
 
-    function shuffle(array){
-      for(let i=array.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]]}
-      return array;
-    }
-
-    const quizDiv=document.getElementById('quiz');
-    let selected={};
+    const quizDiv = document.getElementById('quiz');
 
     function buildQuiz(){
+      const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
       quizDiv.innerHTML='';
-      const randomized=shuffle([...questions]);
-      randomized.forEach((q,idx)=>{
+      shuffledQuestions.forEach((item,i)=>{
         const div=document.createElement('div');
         div.className='question';
-        div.innerHTML=`<h3>${idx+1}. ${q.q}</h3>`;
-        q.options.forEach((opt,i)=>{
-          const optEl=document.createElement('div');
-          optEl.className='option';
-          optEl.textContent=opt;
-          optEl.onclick=()=>selectOption(idx,i,optEl,randomized);
-          div.appendChild(optEl);
+        let optionsHtml = '';
+        item.options.forEach((opt,j)=>{
+          optionsHtml += `<label><input type="radio" name="q${i}" value="${j}"> ${opt}</label>`;
         });
+        div.innerHTML=`<h3>${i+1}. ${item.q}</h3><div class="options">${optionsHtml}</div>`;
         quizDiv.appendChild(div);
       });
-      return randomized;
+      const submitBtn=document.createElement('button');
+      submitBtn.textContent='Finish Review';
+      submitBtn.style.marginTop='1rem';
+      submitBtn.onclick=()=>finishReview(shuffledQuestions);
+      quizDiv.appendChild(submitBtn);
     }
 
-    let currentSet=buildQuiz();
-
-    function selectOption(qIndex,optIndex,element,set){
-      const options=element.parentElement.querySelectorAll('.option');
-      options.forEach(o=>o.style.background='');
-      element.style.background='#e0f2fe';
-      selected[qIndex]=optIndex;
-    }
-
-    document.getElementById('submitBtn').onclick=()=>{
-      let score=0;
-      const questionDivs=document.querySelectorAll('.question');
-      questionDivs.forEach((div,i)=>{
-        const opts=div.querySelectorAll('.option');
-        const q=currentSet[i];
-        opts.forEach((opt,idx)=>{
-          opt.onclick=null;
-          if(idx===q.correct){opt.classList.add('correct');}
-          if(selected[i]===idx && idx!==q.correct){opt.classList.add('incorrect');}
-        });
-        if(selected[i]===q.correct)score++;
+    function finishReview(shuffledQuestions){
+      let score = 0;
+      shuffledQuestions.forEach((q,i)=>{
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if(selected && parseInt(selected.value) === q.answer) score++;
       });
-      const percent=Math.round((score/currentSet.length)*100);
-      const results=document.getElementById('results');
-      results.style.display='block';
-      results.innerHTML=`<h2>Your Score: ${score}/${currentSet.length} (${percent}%)</h2>`;
-      document.getElementById('submitBtn').style.display='none';
-      document.getElementById('restartBtn').style.display='inline-block';
-    };
+      document.getElementById('scoreText').textContent = `You scored ${score} out of ${shuffledQuestions.length}`;
+      document.getElementById('results').style.display='block';
+      document.getElementById('results').scrollIntoView({behavior:'smooth'});
+    }
 
-    document.getElementById('restartBtn').onclick=()=>{
-      selected={};
+    function restartQuiz(){
       document.getElementById('results').style.display='none';
-      document.getElementById('submitBtn').style.display='inline-block';
-      document.getElementById('restartBtn').style.display='none';
-      currentSet=buildQuiz();
-    };
+      buildQuiz();
+    }
+
+    buildQuiz();
   </script>
 </body>
 </html>
