@@ -3,217 +3,121 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nutrition Exam 2 — Questions & Answers</title>
+  <title>Nutrition Exam 2 — Multiple Choice Review</title>
   <style>
-    :root{
-      --bg:#f7fafc;--card:#ffffff;--muted:#6b7280;--accent:#0ea5a4;--text:#0f172a;
-      --maxw:980px;
-    }
-    *{box-sizing:border-box}
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px;display:flex;justify-content:center}
-    .wrap{width:100%;max-width:var(--maxw)}
-    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-    h1{font-size:1.5rem;margin:0}
-    .controls{display:flex;gap:8px;align-items:center}
-    button{background:var(--accent);border:0;color:white;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
-    button.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
-    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(2,6,23,0.08)}
-    .meta{color:var(--muted);font-size:0.9rem;margin-bottom:10px}
-    .search{margin:10px 0;display:flex;gap:8px}
-    .search input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid #e6edf0}
-    .two-col{display:grid;grid-template-columns:1fr 320px;gap:16px}
-    @media (max-width:900px){.two-col{grid-template-columns:1fr} .toc{order:2}}
-    ol.questions{padding-left:18px;margin:0}
-    ol.questions li{padding:10px 12px;border-radius:8px;margin-bottom:8px;background:#fbfdff;border:1px solid #eef6f6}
-    .question-text{font-weight:600}
-    .answer{margin-top:6px;padding:10px;border-radius:8px;background:#ffffff;display:none;border-left:4px solid #e6f7f6}
-    .answer.visible{display:block}
-    .toc{position:sticky;top:24px;height:fit-content}
-    .toc h3{margin-top:0}
-    .toc ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
-    .toc a{color:var(--accent);text-decoration:none}
-    footer{margin-top:18px;color:var(--muted);font-size:0.9rem}
-    .controls .muted{background:#fff;color:var(--muted);border:1px solid #e6edf0;padding:8px;border-radius:8px}
-    .print-warning{font-size:0.85rem;color:var(--muted);margin-top:8px}
-    .highlight{background:linear-gradient(90deg,#effbf9,#ffffff);padding:6px 8px;border-radius:6px}
+    body{font-family:Inter,Arial,sans-serif;background:#f9fafb;margin:0;padding:0;color:#111}
+    header{background:#0ea5a4;color:#fff;padding:1rem;text-align:center}
+    main{max-width:900px;margin:2rem auto;padding:1rem;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+    h1{margin:0;font-size:1.8rem}
+    .question{margin-bottom:1.2rem;padding:1rem;border:1px solid #e2e8f0;border-radius:8px}
+    .question h3{margin:0 0 .5rem 0;font-size:1.1rem}
+    .option{display:block;margin:.4rem 0;padding:.5rem;border:1px solid #ccc;border-radius:6px;cursor:pointer}
+    .option.correct{background:#d1fae5;border-color:#10b981}
+    .option.incorrect{background:#fee2e2;border-color:#ef4444}
+    .actions{text-align:center;margin-top:1.5rem}
+    button{background:#0ea5a4;border:none;color:#fff;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:600}
+    button:hover{background:#0c8b8a}
+    .results{text-align:center;margin-top:2rem;display:none}
+    .results h2{color:#0ea5a4}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>Nutrition Exam 2 — Questions &amp; Answers</h1>
-        <div class="meta">Chapters 7–13 • 50 questions • Instructor editable</div>
-      </div>
-      <div class="controls">
-        <button id="toggleAnswers">Show Answers</button>
-        <button id="printBtn" class="ghost">Print / Save PDF</button>
-      </div>
-    </header>
-
-    <main class="two-col">
-      <section class="card exam">
-        <div class="search">
-          <input id="searchBox" placeholder="Search questions or answers (e.g. 'vitamin', 'alcohol')" />
-          <button id="clearSearch" class="muted">Clear</button>
-        </div>
-
-        <ol class="questions" id="questionsList">
-          <!-- Questions inserted by JavaScript -->
-        </ol>
-
-        <footer>
-          <div class="print-warning">Tip: Use the print button to generate a paper/PDF-friendly version. Answers will be included/hidden based on the "Show Answers" toggle.</div>
-        </footer>
-      </section>
-
-      <aside class="toc card">
-        <h3>Quick Navigation</h3>
-        <ul id="navList"></ul>
-        <hr style="margin:12px 0;border:0;border-top:1px solid #eef6f6">
-        <div>
-          <strong>Tools</strong>
-          <p style="margin:6px 0;color:var(--muted);font-size:0.9rem">Toggle answers, search, print, or copy the exam text.</p>
-          <button id="copyBtn" class="ghost">Copy Exam Text</button>
-        </div>
-      </aside>
-    </main>
-  </div>
+  <header>
+    <h1>Nutrition Exam 2 — Multiple Choice Review</h1>
+    <p>Chapters 7–13 • Automatic Scoring Enabled</p>
+  </header>
+  <main id="quiz"></main>
+  <div class="actions"><button id="submitBtn">Submit Answers</button> <button id="restartBtn" style="display:none">Restart</button></div>
+  <div class="results" id="results"></div>
 
   <script>
-    // Questions & answers data (from the provided PDF)
-    const qa = [
-      {q: 'What are the causes of night blindness in alcoholics?', a: 'Vitamin A deficiency due to impaired absorption and liver damage.'},
-      {q: 'What is the definition of metabolism?', a: 'The sum of all chemical reactions that occur within the body to maintain life.'},
-      {q: 'What are the definition of the two types of metabolism: aerobic and anaerobic?', a: 'Aerobic metabolism requires oxygen to produce ATP; anaerobic metabolism produces ATP without oxygen and yields lactic acid.'},
-      {q: 'What are the results of starving or starvation?', a: 'Muscle wasting, decreased metabolic rate, nutrient deficiencies, and eventual organ failure.'},
-      {q: 'What is energy vs expenditure balances?', a: 'Energy intake from food equals energy used for basal metabolism, activity, and thermogenesis.'},
-      {q: 'What is the basal metabolism in men vs women?', a: 'Men generally have a higher basal metabolic rate due to greater lean body mass.'},
-      {q: 'What is the definition of BMI?', a: 'Body Mass Index = weight (kg) / height (m²), a measure used to classify underweight/overweight.'},
-      {q: 'What is the Calories in 1 pound of fat?', a: 'Approximately 3,500 kcal.'},
-      {q: 'What is the definition anorexia nervosa?', a: 'An eating disorder characterized by self-starvation and intense fear of gaining weight.'},
-      {q: 'What are the cause of thermoregulation in anorexia nervosa individuals?', a: 'Impaired thermoregulation due to loss of body fat and reduced metabolic rate causing sensitivity to cold.'},
-      {q: 'What are the benefits of exercise?', a: 'Improves cardiovascular health, increases metabolism, strengthens muscles and bones, and supports mental health.'},
-      {q: 'What is the predominate fuel for exercise?', a: 'Carbohydrates (glucose and glycogen).'},
-      {q: 'Where is glucose stored?', a: 'In the liver and skeletal muscle as glycogen.'},
-      {q: 'What is storing glycogen regimen known as?', a: 'Carbohydrate loading.'},
-      {q: 'What does fluid consumption during exercise look like?', a: 'Drink before, during, and after exercise; use sports drinks for prolonged activity to replace electrolytes.'},
-      {q: 'What is the definition of hyponatremia and its causes?', a: 'Low blood sodium usually caused by excessive water intake and sodium loss through sweat.'},
-      {q: 'What are conditions associated with alcoholism?', a: 'Liver disease (cirrhosis), pancreatitis, neuropathy, malnutrition, Wernicke–Korsakoff, vitamin deficiencies.'},
-      {q: 'What does the dietary protein intake look like for Americans?', a: 'Americans typically consume more protein than the RDA; intake often exceeds requirements.'},
-      {q: 'What is the definition of amino acids?', a: 'Organic compounds that combine to form proteins; contain an amino group and carboxyl group.'},
-      {q: 'Which organ is responsible for ethanol metabolism?', a: 'The liver.'},
-      {q: 'How does alcohol consumption effect pregnancy?', a: 'Can cause fetal alcohol spectrum disorders (FASD), growth restriction, and congenital abnormalities.'},
-      {q: 'What are sources of protein?', a: 'Meat, poultry, fish, eggs, dairy, legumes, nuts, and soy products.'},
-      {q: 'Where are fat-soluble vitamins stored?', a: 'In the liver and adipose tissue.'},
-      {q: 'What is the essential nutrient for blood clotting?', a: 'Vitamin K.'},
-      {q: 'How are water soluble vitamin excreted?', a: 'They are generally excreted in urine and are not stored in large amounts.'},
-      {q: 'What are vitamin D sources and how is it utilized in the body?', a: 'Synthesized in skin from sunlight; found in fortified foods and fatty fish; promotes calcium absorption and bone health.'},
-      {q: 'What are indications of Thiamin therapy?', a: 'Treatment or prevention of beriberi and Wernicke–Korsakoff syndrome, particularly in alcoholics.'},
-      {q: 'What are indications for folate need?', a: 'Pregnancy (neural tube defect prevention), anemia, and increased cell division.'},
-      {q: 'What are food sources for Vitamin D?', a: 'Fortified dairy and cereals, fatty fish (salmon, tuna), egg yolks.'},
-      {q: 'What are food sources for Vitamin C?', a: 'Citrus fruits, strawberries, bell peppers, broccoli, and tomatoes.'},
-      {q: 'Vitamin A deficiency leads to what disorders?', a: 'Night blindness, xerophthalmia, and keratinization of epithelial tissues.'},
-      {q: 'What are sources of Iron?', a: 'Red meat, poultry, fish, lentils, spinach, and fortified cereals.'},
-      {q: 'Iodide deficiency leads to what disorders?', a: 'Goiter and developmental problems (cretinism) in severe deficiency.'},
-      {q: 'What is the sodium amount in salt?', a: 'Table salt (NaCl) is about 40% sodium by weight.'},
-      {q: 'Vitamin C deficiency leads to what disorders?', a: 'Scurvy — bleeding gums, pinpoint hemorrhages, poor wound healing, and fatigue.'},
-      {q: 'What are the sources of vitamin B12?', a: 'Animal products such as meat, fish, eggs, milk; fortified foods for vegetarians.'},
-      {q: 'How many Calories are in alcohol?', a: '7 calories per gram.'},
-      {q: 'How many Calories are in protein?', a: '4 calories per gram.'},
-      {q: 'What are the sources of essential amino acids?', a: 'Complete proteins (animal sources, soy) or combining plant proteins (e.g., rice + beans).'},
-      {q: 'What is the definition of marasmus?', a: 'Severe protein-energy malnutrition characterized by wasting of fat and muscle.'},
-      {q: 'What is the control center of satiety?', a: 'The hypothalamus (particularly the arcuate nucleus).'},
-      {q: 'What is energy expenditure total?', a: 'Total energy expenditure = basal metabolic rate + physical activity energy + thermic effect of food.'},
-      {q: 'What is the definition of catabolic metabolism?', a: 'Metabolic pathways that break down molecules to release energy.'},
-      {q: 'What are weight loss strategies?', a: 'Caloric deficit through diet, increased physical activity, behavior changes, and medical interventions when appropriate.'},
-      {q: 'What are sources for Vitamin E?', a: 'Vegetable oils, nuts, seeds, and green leafy vegetables.'},
-      {q: 'What are methods that destroy water soluble vitamins?', a: 'Heat, prolonged cooking, leaching in water, and exposure to light/oxygen.'},
-      {q: 'What are forms of zinc intake?', a: 'Dietary sources include meat, shellfish, legumes, nuts, and fortified cereals; supplements available as zinc gluconate, sulfate, or picolinate.'},
-      {q: 'What are indications for Vitamin K need?', a: 'Newborn prophylaxis, bleeding disorders, or deficiency due to malabsorption or medication (e.g., warfarin reversal).'},
-      {q: 'What are treatment to lower LDL cholesterol?', a: 'Lifestyle: reduce saturated/trans fats, increase soluble fiber, exercise; medications include statins, ezetimibe, PCSK9 inhibitors.'},
-      {q: 'How should products containing riboflavin be stored?', a: 'Stored away from light in opaque containers because riboflavin is light-sensitive.'}
+    const questions = [
+      {q:'What vitamin deficiency causes night blindness?', options:['Vitamin A','Vitamin D','Vitamin C','Vitamin B12'], correct:0},
+      {q:'How many calories are in 1 lb of fat?', options:['3,500','2,500','1,000','4,000'], correct:0},
+      {q:'Which organ metabolizes ethanol?', options:['Liver','Kidney','Stomach','Pancreas'], correct:0},
+      {q:'What is the primary fuel for exercise?', options:['Carbohydrates','Protein','Fat','Alcohol'], correct:0},
+      {q:'Vitamin K is essential for what function?', options:['Blood clotting','Vision','Calcium absorption','Energy metabolism'], correct:0},
+      {q:'How many calories per gram are in alcohol?', options:['7','4','9','0'], correct:0},
+      {q:'What is the control center of satiety?', options:['Hypothalamus','Cerebellum','Thalamus','Brainstem'], correct:0},
+      {q:'Which vitamin deficiency leads to scurvy?', options:['Vitamin C','Vitamin D','Vitamin A','Vitamin B6'], correct:0},
+      {q:'What is the main storage form of glucose?', options:['Glycogen','Fat','Protein','Lactic acid'], correct:0},
+      {q:'Iodine deficiency causes which disorder?', options:['Goiter','Rickets','Scurvy','Anemia'], correct:0},
+      {q:'What nutrient provides 4 kcal/gram?', options:['Protein','Fat','Alcohol','Fiber'], correct:0},
+      {q:'Which organ stores fat-soluble vitamins?', options:['Liver','Kidney','Heart','Lungs'], correct:0},
+      {q:'Marasmus is caused by:', options:['Severe protein-energy malnutrition','Vitamin deficiency','Obesity','Iron overload'], correct:0},
+      {q:'Which vitamin is produced from sunlight exposure?', options:['Vitamin D','Vitamin C','Vitamin E','Vitamin B12'], correct:0},
+      {q:'Which mineral deficiency can cause anemia?', options:['Iron','Zinc','Iodine','Calcium'], correct:0},
+      {q:'How many calories per gram are in protein?', options:['4','7','9','2'], correct:0},
+      {q:'The hypothalamus regulates:', options:['Satiety and hunger','Blood filtration','Digestive enzymes','Hormone secretion only'], correct:0},
+      {q:'Hyponatremia results from:', options:['Low blood sodium','High potassium','Low calcium','Dehydration'], correct:0},
+      {q:'What destroys water-soluble vitamins?', options:['Heat and light','Cold','Freezing','Fermentation'], correct:0},
+      {q:'The basal metabolic rate is usually higher in:', options:['Men','Women','Children','Elderly'], correct:0}
     ];
 
-    const list = document.getElementById('questionsList');
-    const nav = document.getElementById('navList');
-
-    qa.forEach((item, idx) => {
-      const li = document.createElement('li');
-      li.id = `q${idx+1}`;
-      li.innerHTML = `<div class="question-text">${idx+1}. ${escapeHtml(item.q)}</div>` +
-                     `<div class="answer" data-index="${idx}">${escapeHtml(item.a)}</div>`;
-      list.appendChild(li);
-
-      const navItem = document.createElement('li');
-      navItem.innerHTML = `<a href="#q${idx+1}">${idx+1}. ${short(item.q)}</a>`;
-      nav.appendChild(navItem);
-    });
-
-    // Utilities
-    function escapeHtml(s){ return s.replace(/[&<>\"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-    function short(s){ return s.length>40 ? s.slice(0,40)+'...' : s }
-
-    // Toggle answers
-    const toggleBtn = document.getElementById('toggleAnswers');
-    let showing = false;
-    toggleBtn.addEventListener('click', ()=>{
-      showing = !showing;
-      document.querySelectorAll('.answer').forEach(el=> el.classList.toggle('visible', showing));
-      toggleBtn.textContent = showing ? 'Hide Answers' : 'Show Answers';
-    });
-
-    // Search
-    const searchBox = document.getElementById('searchBox');
-    const clearBtn = document.getElementById('clearSearch');
-    searchBox.addEventListener('input', ()=>{
-      const term = searchBox.value.trim().toLowerCase();
-      filter(term);
-    });
-    clearBtn.addEventListener('click', ()=>{ searchBox.value=''; filter(''); searchBox.focus(); });
-
-    function filter(term){
-      qa.forEach((item, i)=>{
-        const li = document.getElementById('q'+(i+1));
-        const text = (item.q + ' ' + item.a).toLowerCase();
-        const match = term === '' || text.includes(term);
-        li.style.display = match ? '' : 'none';
-      });
+    function shuffle(array){
+      for(let i=array.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]]}
+      return array;
     }
 
-    // Print button
-    document.getElementById('printBtn').addEventListener('click', ()=>{
-      // For print, ensure answers are visible if the toggle is on
-      const prev = document.querySelectorAll('.answer');
-      // Open print dialog
-      window.print();
-    });
+    const quizDiv=document.getElementById('quiz');
+    let selected={};
 
-    // Copy exam text
-    document.getElementById('copyBtn').addEventListener('click', async ()=>{
-      let text = 'Nutrition Exam 2 — Questions & Answers\n\n';
-      qa.forEach((item, i)=>{
-        text += (i+1)+'. '+item.q + '\n';
-        if(showing) text += 'Answer: '+item.a + '\n\n'; else text += '\n';
+    function buildQuiz(){
+      quizDiv.innerHTML='';
+      const randomized=shuffle([...questions]);
+      randomized.forEach((q,idx)=>{
+        const div=document.createElement('div');
+        div.className='question';
+        div.innerHTML=`<h3>${idx+1}. ${q.q}</h3>`;
+        q.options.forEach((opt,i)=>{
+          const optEl=document.createElement('div');
+          optEl.className='option';
+          optEl.textContent=opt;
+          optEl.onclick=()=>selectOption(idx,i,optEl,randomized);
+          div.appendChild(optEl);
+        });
+        quizDiv.appendChild(div);
       });
-      try{ await navigator.clipboard.writeText(text); alert('Exam copied to clipboard.'); } catch(e){ alert('Copy failed — select and copy manually.'); }
-    });
+      return randomized;
+    }
 
-    // Accessibility: allow clicking question to toggle its answer
-    list.addEventListener('click', e=>{
-      const li = e.target.closest('li');
-      if(!li) return;
-      const ans = li.querySelector('.answer');
-      if(!ans) return;
-      ans.classList.toggle('visible');
-    });
+    let currentSet=buildQuiz();
 
-    // Keyboard shortcut: 'a' toggles answers
-    window.addEventListener('keydown', e=>{
-      if(e.key==='a' && (e.ctrlKey||e.metaKey)){
-        e.preventDefault(); toggleBtn.click();
-      }
-    });
+    function selectOption(qIndex,optIndex,element,set){
+      const options=element.parentElement.querySelectorAll('.option');
+      options.forEach(o=>o.style.background='');
+      element.style.background='#e0f2fe';
+      selected[qIndex]=optIndex;
+    }
+
+    document.getElementById('submitBtn').onclick=()=>{
+      let score=0;
+      const questionDivs=document.querySelectorAll('.question');
+      questionDivs.forEach((div,i)=>{
+        const opts=div.querySelectorAll('.option');
+        const q=currentSet[i];
+        opts.forEach((opt,idx)=>{
+          opt.onclick=null;
+          if(idx===q.correct){opt.classList.add('correct');}
+          if(selected[i]===idx && idx!==q.correct){opt.classList.add('incorrect');}
+        });
+        if(selected[i]===q.correct)score++;
+      });
+      const percent=Math.round((score/currentSet.length)*100);
+      const results=document.getElementById('results');
+      results.style.display='block';
+      results.innerHTML=`<h2>Your Score: ${score}/${currentSet.length} (${percent}%)</h2>`;
+      document.getElementById('submitBtn').style.display='none';
+      document.getElementById('restartBtn').style.display='inline-block';
+    };
+
+    document.getElementById('restartBtn').onclick=()=>{
+      selected={};
+      document.getElementById('results').style.display='none';
+      document.getElementById('submitBtn').style.display='inline-block';
+      document.getElementById('restartBtn').style.display='none';
+      currentSet=buildQuiz();
+    };
   </script>
 </body>
 </html>
