@@ -33,71 +33,74 @@
 
   <script>
     const questions = [
-      {q:'What are the causes of night blindness in alcoholics?', options:['Vitamin A deficiency','Vitamin D deficiency','Iron deficiency','Vitamin C deficiency'], answer:0},
-      {q:'What is the definition of metabolism?', options:['Sum of all chemical reactions in the body','Amount of energy burned','Body mass index','Calories in vs calories out'], answer:0},
-      {q:'Which type of metabolism requires oxygen?', options:['Aerobic','Anaerobic','Catabolic','Anabolic'], answer:0},
-      {q:'What are common results of starvation?', options:['Muscle wasting, nutrient deficiencies','Weight gain','Improved metabolism','Increased energy'], answer:0},
-      {q:'Energy balance occurs when?', options:['Intake equals expenditure','Intake exceeds expenditure','Expenditure exceeds intake','No relation'], answer:0},
-      {q:'Who has higher basal metabolism?', options:['Men','Women','Children','Elderly'], answer:0},
-      {q:'BMI stands for?', options:['Body Mass Index','Basal Metabolic Intake','Blood Mass Indicator','Body Measurement Index'], answer:0},
-      {q:'Calories in 1 lb of fat?', options:['3500 kcal','1000 kcal','500 kcal','7000 kcal'], answer:0},
-      {q:'Define anorexia nervosa.', options:['Self-starvation and fear of weight gain','Excessive overeating','Vitamin deficiency','Muscle wasting'], answer:0},
-      {q:'Why is thermoregulation poor in anorexia nervosa?', options:['Low body fat and slowed metabolism','High metabolism','Dehydration','Excess fat'], answer:0},
-      {q:'Benefits of exercise include?', options:['Heart health, metabolism, mental health','Weight gain','Muscle loss','Dehydration'], answer:0},
-      {q:'Predominant fuel for exercise?', options:['Carbohydrates','Protein','Fat','Alcohol'], answer:0},
-      {q:'Where is glucose stored?', options:['Liver and muscles','Fat tissue','Heart','Blood only'], answer:0},
-      {q:'Carbohydrate loading is for?', options:['Endurance performance','Weight loss','Muscle gain','Sleep improvement'], answer:0},
-      {q:'Fluid consumption during exercise?', options:['Before, during, after','Only after','Only before','Not needed'], answer:0},
-      {q:'Hyponatremia is?', options:['Low blood sodium','High blood potassium','Low calcium','High magnesium'], answer:0},
-      {q:'Conditions associated with alcoholism?', options:['Cirrhosis, neuropathy, vitamin deficiency','Obesity','Diabetes','Hypertension'], answer:0},
-      {q:'Typical American protein intake?', options:['Usually exceeds recommendation','Usually deficient','Perfectly balanced','Unknown'], answer:0},
-      {q:'Amino acids are?', options:['Protein building blocks','Fats','Carbohydrates','Vitamins'], answer:0},
-      {q:'Which organ metabolizes ethanol?', options:['Liver','Kidney','Heart','Pancreas'], answer:0},
-      {q:'Alcohol during pregnancy causes?', options:['Fetal alcohol spectrum disorders','Weight gain','Improved metabolism','Bone growth'], answer:0},
-      {q:'Protein sources include?', options:['Meat, eggs, legumes, dairy','Sugar, candy','Vegetable oil','Bread only'], answer:0},
-      {q:'Fat-soluble vitamins are stored in?', options:['Liver and adipose tissue','Kidney','Muscles','Blood only'], answer:0},
-      {q:'Essential nutrient for blood clotting?', options:['Vitamin K','Vitamin A','Vitamin C','Iron'], answer:0},
-      {q:'Water-soluble vitamins are excreted via?', options:['Urine','Sweat','Feces','Hair'], answer:0},
-      {q:'Vitamin D sources?', options:['Sunlight, fortified foods','Meat only','Citrus fruits','Sugar'], answer:0},
-      {q:'Thiamin therapy treats?', options:['Beriberi, Wernicke–Korsakoff','Scurvy','Rickets','Anemia'], answer:0},
-      {q:'Folate need increases during?', options:['Pregnancy','Exercise','Cold weather','Sleep'], answer:0},
-      {q:'Vitamin D food sources?', options:['Fish, fortified milk, eggs','Fruits','Bread','Sugar'], answer:0},
-      {q:'Vitamin C food sources?', options:['Citrus, peppers, broccoli','Meat','Dairy','Eggs'], answer:0},
-      {q:'Vitamin A deficiency causes?', options:['Night blindness, xerophthalmia','Scurvy','Rickets','Anemia'], answer:0},
-      {q:'Sources of Iron?', options:['Red meat, beans, spinach','Citrus','Milk','Sugar'], answer:0},
-      {q:'Iodide deficiency leads to?', options:['Goiter, cretinism','Night blindness','Rickets','Scurvy'], answer:0},
-      {q:'Sodium amount in salt?', options:['About 40%','10%','60%','100%'], answer:0},
-      {q:'Vitamin C deficiency causes?', options:['Scurvy','Night blindness','Beriberi','Anemia'], answer:0},
-      {q:'Sources of Vitamin B12?', options:['Meat, fish, eggs, milk','Citrus','Vegetables','Grains'], answer:0},
-      {q:'Calories in alcohol?', options:['7 kcal/gram','4 kcal/gram','9 kcal/gram','0 kcal'], answer:0},
-      {q:'Calories in protein?', options:['4 kcal/gram','7 kcal/gram','9 kcal/gram','0 kcal'], answer:0},
-      {q:'Sources of essential amino acids?', options:['Animal or combined plant proteins','Fats','Sugar','Vegetables only'], answer:0},
-      {q:'Define marasmus.', options:['Severe protein-energy malnutrition','Obesity','Dehydration','Vitamin deficiency'], answer:0},
-      {q:'Control center of satiety?', options:['Hypothalamus','Pituitary','Thyroid','Heart'], answer:0},
-      {q:'Total energy expenditure includes?', options:['BMR + activity + thermic effect of food','Only BMR','Only activity','Only thermic effect'], answer:0},
-      {q:'Catabolic metabolism?', options:['Breaking molecules for energy','Building molecules','Storing fat','Excreting waste'], answer:0},
-      {q:'Healthy weight loss strategies?', options:['Balanced diet, portion control, exercise','Fasting only','Skipping meals','Diet pills only'], answer:0},
-      {q:'Sources of Vitamin E?', options:['Nuts, seeds, oils, greens','Meat','Sugar','Bread'], answer:0},
-      {q:'Methods destroying water-soluble vitamins?', options:['Heat, light, water','Freezing only','Salt','Drying'], answer:0},
-      {q:'Sources of Zinc?', options:['Meat, shellfish, legumes, grains','Sugar','Citrus','Vegetables only'], answer:0},
-      {q:'Indications for Vitamin K?', options:['Bleeding disorders, newborn prophylaxis','Night blindness','Scurvy','Rickets'], answer:0},
-      {q:'Ways to lower LDL cholesterol?', options:['Reduce saturated fat, increase fiber, exercise, statins','Eat sugar','Avoid exercise','Increase fat intake'], answer:0},
-      {q:'How to store riboflavin?', options:['Opaque containers away from light','In fridge only','In water','In sunlight'], answer:0}
+      {q:'What are the causes of night blindness in alcoholics?', correct:'Vitamin A deficiency', incorrect:['Vitamin D deficiency','Iron deficiency','Vitamin C deficiency']},
+      {q:'What is the definition of metabolism?', correct:'Sum of all chemical reactions in the body', incorrect:['Energy used daily','Rate of digestion','Amount of calories eaten']},
+      {q:'Which type of metabolism requires oxygen?', correct:'Aerobic', incorrect:['Anaerobic','Anabolic','Catabolic']},
+      {q:'What are common results of starvation?', correct:'Muscle wasting, nutrient deficiencies', incorrect:['Weight gain','Increased strength','Faster metabolism']},
+      {q:'Energy balance occurs when?', correct:'Intake equals expenditure', incorrect:['Intake exceeds expenditure','Expenditure exceeds intake','Energy stored as fat']},
+      {q:'Who has higher basal metabolism?', correct:'Men', incorrect:['Women','Children','Elderly']},
+      {q:'BMI stands for?', correct:'Body Mass Index', incorrect:['Basal Metabolic Intake','Blood Mass Indicator','Body Measurement Index']},
+      {q:'Calories in 1 lb of fat?', correct:'3500 kcal', incorrect:['1000 kcal','500 kcal','7000 kcal']},
+      {q:'Define anorexia nervosa.', correct:'Self-starvation and fear of weight gain', incorrect:['Overeating','Binge eating','Vitamin deficiency']},
+      {q:'Why is thermoregulation poor in anorexia nervosa?', correct:'Low body fat and slowed metabolism', incorrect:['High metabolism','Dehydration','Excess calories']},
+      {q:'Benefits of exercise include?', correct:'Heart health, metabolism, mental health', incorrect:['Muscle loss','Dehydration','Weight gain']},
+      {q:'Predominant fuel for exercise?', correct:'Carbohydrates', incorrect:['Protein','Fat','Alcohol']},
+      {q:'Where is glucose stored?', correct:'Liver and muscles', incorrect:['Adipose tissue','Heart','Pancreas']},
+      {q:'Carbohydrate loading is for?', correct:'Endurance performance', incorrect:['Weight loss','Muscle gain','Sleep']},
+      {q:'Fluid consumption during exercise?', correct:'Before, during, and after exercise', incorrect:['Only after','Only before','Not needed']},
+      {q:'Hyponatremia is?', correct:'Low blood sodium', incorrect:['High blood potassium','Low calcium','High magnesium']},
+      {q:'Conditions associated with alcoholism?', correct:'Cirrhosis, neuropathy, vitamin deficiency', incorrect:['Diabetes','Obesity','Hypertension']},
+      {q:'Typical American protein intake?', correct:'Usually exceeds recommendation', incorrect:['Usually deficient','Perfectly balanced','Unknown']},
+      {q:'Amino acids are?', correct:'Protein building blocks', incorrect:['Carbs','Fats','Vitamins']},
+      {q:'Which organ metabolizes ethanol?', correct:'Liver', incorrect:['Kidney','Heart','Pancreas']},
+      {q:'Alcohol during pregnancy causes?', correct:'Fetal alcohol spectrum disorders', incorrect:['Improved metabolism','Bone growth','Healthy weight gain']},
+      {q:'Protein sources include?', correct:'Meat, eggs, legumes, dairy', incorrect:['Candy','Bread','Sugar']},
+      {q:'Fat-soluble vitamins are stored in?', correct:'Liver and adipose tissue', incorrect:['Kidney','Muscles','Blood']},
+      {q:'Essential nutrient for blood clotting?', correct:'Vitamin K', incorrect:['Vitamin A','Vitamin C','Iron']},
+      {q:'Water-soluble vitamins are excreted via?', correct:'Urine', incorrect:['Sweat','Feces','Hair']},
+      {q:'Vitamin D sources?', correct:'Sunlight, fortified foods', incorrect:['Meat only','Citrus fruits','Sugar']},
+      {q:'Thiamin therapy treats?', correct:'Beriberi, Wernicke–Korsakoff syndrome', incorrect:['Rickets','Scurvy','Anemia']},
+      {q:'Folate need increases during?', correct:'Pregnancy', incorrect:['Exercise','Menopause','Cold weather']},
+      {q:'Vitamin D food sources?', correct:'Fish, fortified milk, eggs', incorrect:['Bread','Fruit','Sugar']},
+      {q:'Vitamin C food sources?', correct:'Citrus, peppers, broccoli', incorrect:['Meat','Eggs','Milk']},
+      {q:'Vitamin A deficiency causes?', correct:'Night blindness, xerophthalmia', incorrect:['Scurvy','Rickets','Anemia']},
+      {q:'Sources of Iron?', correct:'Red meat, beans, spinach', incorrect:['Milk','Citrus','Sugar']},
+      {q:'Iodide deficiency leads to?', correct:'Goiter, cretinism', incorrect:['Night blindness','Scurvy','Rickets']},
+      {q:'Sodium amount in salt?', correct:'About 40%', incorrect:['10%','60%','100%']},
+      {q:'Vitamin C deficiency causes?', correct:'Scurvy', incorrect:['Beriberi','Rickets','Night blindness']},
+      {q:'Sources of Vitamin B12?', correct:'Meat, fish, eggs, milk', incorrect:['Vegetables','Grains','Citrus']},
+      {q:'Calories in alcohol?', correct:'7 kcal/gram', incorrect:['4 kcal/gram','9 kcal/gram','0 kcal']},
+      {q:'Calories in protein?', correct:'4 kcal/gram', incorrect:['7 kcal/gram','9 kcal/gram','0 kcal']},
+      {q:'Sources of essential amino acids?', correct:'Animal or combined plant proteins', incorrect:['Fats','Sugar','Vegetables only']},
+      {q:'Define marasmus.', correct:'Severe protein-energy malnutrition', incorrect:['Vitamin deficiency','Obesity','Dehydration']},
+      {q:'Control center of satiety?', correct:'Hypothalamus', incorrect:['Pituitary','Thyroid','Heart']},
+      {q:'Total energy expenditure includes?', correct:'BMR + activity + thermic effect of food', incorrect:['Only BMR','Only activity','Only thermic effect']},
+      {q:'Catabolic metabolism?', correct:'Breaking molecules for energy', incorrect:['Building molecules','Storing fat','Producing heat only']},
+      {q:'Healthy weight loss strategies?', correct:'Balanced diet, portion control, exercise', incorrect:['Fasting only','Skipping meals','Diet pills only']},
+      {q:'Sources of Vitamin E?', correct:'Nuts, seeds, oils, greens', incorrect:['Meat','Sugar','Bread']},
+      {q:'Methods destroying water-soluble vitamins?', correct:'Heat, light, water', incorrect:['Salt','Drying','Freezing only']},
+      {q:'Sources of Zinc?', correct:'Meat, shellfish, legumes, grains', incorrect:['Sugar','Vegetables only','Citrus']},
+      {q:'Indications for Vitamin K?', correct:'Bleeding disorders, newborn prophylaxis', incorrect:['Rickets','Scurvy','Night blindness']},
+      {q:'Ways to lower LDL cholesterol?', correct:'Reduce saturated fat, increase fiber, exercise, statins', incorrect:['Eat more sugar','Avoid exercise','Increase fat intake']},
+      {q:'How to store riboflavin?', correct:'Opaque containers away from light', incorrect:['In fridge','In water','In sunlight']}
     ];
 
     const quizDiv = document.getElementById('quiz');
 
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
     function buildQuiz(){
-      const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+      const shuffledQuestions = shuffle([...questions]);
       quizDiv.innerHTML='';
       shuffledQuestions.forEach((item,i)=>{
         const div=document.createElement('div');
         div.className='question';
-        let optionsHtml = '';
-        item.options.forEach((opt,j)=>{
-          optionsHtml += `<label><input type="radio" name="q${i}" value="${j}"> ${opt}</label>`;
-        });
-        div.innerHTML=`<h3>${i+1}. ${item.q}</h3><div class="options">${optionsHtml}</div>`;
+        const allOptions = shuffle([item.correct, ...item.incorrect]);
+        div.innerHTML=`<h3>${i+1}. ${item.q}</h3><div class="options">
+          ${allOptions.map((opt,j)=>`<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>`).join('')}
+        </div>`;
         quizDiv.appendChild(div);
       });
       const submitBtn=document.createElement('button');
@@ -111,7 +114,7 @@
       let score = 0;
       shuffledQuestions.forEach((q,i)=>{
         const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if(selected && parseInt(selected.value) === q.answer) score++;
+        if(selected && selected.value === q.correct) score++;
       });
       document.getElementById('scoreText').textContent = `You scored ${score} out of ${shuffledQuestions.length}`;
       document.getElementById('results').style.display='block';
