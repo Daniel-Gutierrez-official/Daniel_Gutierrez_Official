@@ -1,117 +1,219 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nutrition & Digestion Quiz</title>
-<style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
-  .question { margin-bottom: 15px; }
-  .option { display: block; margin: 5px 0; padding: 8px; background: #f0f0f0; border: none; width: 100%; text-align: left; cursor: pointer; }
-  .option:hover { background: #ddd; }
-  .feedback { font-weight: bold; margin-top: 10px; }
-  button { margin-top: 10px; padding: 10px 15px; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nutrition Exam 2 — Questions & Answers</title>
+  <style>
+    :root{
+      --bg:#f7fafc;--card:#ffffff;--muted:#6b7280;--accent:#0ea5a4;--text:#0f172a;
+      --maxw:980px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px;display:flex;justify-content:center}
+    .wrap{width:100%;max-width:var(--maxw)}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:1.5rem;margin:0}
+    .controls{display:flex;gap:8px;align-items:center}
+    button{background:var(--accent);border:0;color:white;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+    button.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(2,6,23,0.08)}
+    .meta{color:var(--muted);font-size:0.9rem;margin-bottom:10px}
+    .search{margin:10px 0;display:flex;gap:8px}
+    .search input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid #e6edf0}
+    .two-col{display:grid;grid-template-columns:1fr 320px;gap:16px}
+    @media (max-width:900px){.two-col{grid-template-columns:1fr} .toc{order:2}}
+    ol.questions{padding-left:18px;margin:0}
+    ol.questions li{padding:10px 12px;border-radius:8px;margin-bottom:8px;background:#fbfdff;border:1px solid #eef6f6}
+    .question-text{font-weight:600}
+    .answer{margin-top:6px;padding:10px;border-radius:8px;background:#ffffff;display:none;border-left:4px solid #e6f7f6}
+    .answer.visible{display:block}
+    .toc{position:sticky;top:24px;height:fit-content}
+    .toc h3{margin-top:0}
+    .toc ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+    .toc a{color:var(--accent);text-decoration:none}
+    footer{margin-top:18px;color:var(--muted);font-size:0.9rem}
+    .controls .muted{background:#fff;color:var(--muted);border:1px solid #e6edf0;padding:8px;border-radius:8px}
+    .print-warning{font-size:0.85rem;color:var(--muted);margin-top:8px}
+    .highlight{background:linear-gradient(90deg,#effbf9,#ffffff);padding:6px 8px;border-radius:6px}
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Nutrition Exam 2 — Questions &amp; Answers</h1>
+        <div class="meta">Chapters 7–13 • 50 questions • Instructor editable</div>
+      </div>
+      <div class="controls">
+        <button id="toggleAnswers">Show Answers</button>
+        <button id="printBtn" class="ghost">Print / Save PDF</button>
+      </div>
+    </header>
 
-<h1>Nutrition & Digestion Multiple Choice Quiz</h1>
-<div id="quiz-container"></div>
-<div id="score-container"></div>
+    <main class="two-col">
+      <section class="card exam">
+        <div class="search">
+          <input id="searchBox" placeholder="Search questions or answers (e.g. 'vitamin', 'alcohol')" />
+          <button id="clearSearch" class="muted">Clear</button>
+        </div>
 
-<script>
-// Questions array
-const questions = [
-  {q:"What is the primary fuel for the brain?", options:["Protein","Fat","Glucose","Ketones"], answer:"Glucose"},
-  {q:"Define nutrition.", options:["Science of digestion only","Science of food and how the body uses it for growth, maintenance, and health","Study of exercise","Study of vitamins only"], answer:"Science of food and how the body uses it for growth, maintenance, and health"},
-  {q:"Define RDAs (Recommended Dietary Allowances).", options:["Maximum nutrient limits","Average daily nutrient levels to meet nearly all healthy people","Vitamin-only requirements","Daily calorie goals"], answer:"Average daily nutrient levels to meet nearly all healthy people"},
-  {q:"Process of swallowing food involves?", options:["Chewing, tongue pushes bolus, epiglottis closes airway, peristalsis moves food down","Only chewing","Only peristalsis","Only tongue movement"], answer:"Chewing, tongue pushes bolus, epiglottis closes airway, peristalsis moves food down"},
-  {q:"Energy-yielding nutrients include?", options:["Vitamins","Minerals","Carbs, Protein, Fat, Alcohol","Water"], answer:"Carbs, Protein, Fat, Alcohol"},
-  {q:"Nutrient-dense foods example?", options:["Candy","Fruits, vegetables, lean proteins","Soda","French fries"], answer:"Fruits, vegetables, lean proteins"},
-  {q:"Daily Value on Nutrition Facts is based on?", options:["1500 calories","2500 calories","2000 calories","1800 calories"], answer:"2000 calories"},
-  {q:"Poor diet contributes to?", options:["Heart disease, diabetes, obesity, cancer","Cold","Flu","Broken bones"], answer:"Heart disease, diabetes, obesity, cancer"},
-  {q:"Parts of small intestine?", options:["Stomach, colon, rectum","Duodenum, jejunum, ileum","Mouth, esophagus, stomach","Pancreas, liver, gallbladder"], answer:"Duodenum, jejunum, ileum"},
-  {q:"Dietary guidelines reduce risk of?", options:["Chronic diseases like heart disease, diabetes, obesity, certain cancers","Only flu","Only cold","Bone fractures"], answer:"Chronic diseases like heart disease, diabetes, obesity, certain cancers"},
-  {q:"Water-soluble vitamins are?", options:["A,D,E,K","B,C","Iron,Zinc","Calcium, Magnesium"], answer:"B,C"},
-  {q:"Fat-soluble vitamins are?", options:["B,C","A,D,E,K","Vitamin K only","Vitamin B12 only"], answer:"A,D,E,K"},
-  {q:"Where does most digestion occur?", options:["Mouth","Stomach","Small intestine","Large intestine"], answer:"Small intestine"},
-  {q:"Define cross-contamination.", options:["Transfer of harmful microorganisms from one food/surface to another","Mixing vegetables","Cooking meat","Washing fruits"], answer:"Transfer of harmful microorganisms from one food/surface to another"},
-  {q:"Leading cause of peptic ulcer disease?", options:["Stress","Spicy food","Helicobacter pylori infection","Acidic fruits"], answer:"Helicobacter pylori infection"},
-  {q:"Examples of monosaccharides?", options:["Glucose, fructose, galactose","Sucrose, lactose, maltose","Starch, fiber","Protein, fat"], answer:"Glucose, fructose, galactose"},
-  {q:"Functions of fat?", options:["Energy, insulation, hormone synthesis, absorption of fat-soluble vitamins, cell membranes","Only energy","Only insulation","Only digestion"], answer:"Energy, insulation, hormone synthesis, absorption of fat-soluble vitamins, cell membranes"},
-  {q:"Food labeling regulated by?", options:["FDA","USDA","EPA","CDC"], answer:"FDA"},
-  {q:"Temperature danger zone for bacteria growth?", options:["0-32°F","32-40°F","40-140°F","140-200°F"], answer:"40-140°F"},
-  {q:"Goal of RDAs?", options:["Prevent deficiencies and promote optimal health","Treat illness","Increase weight","Increase calories"], answer:"Prevent deficiencies and promote optimal health"},
-  {q:"Factors affecting food choices?", options:["Taste, culture, social influence, cost, convenience, health concerns, advertising","Only taste","Only cost","Only health concerns"], answer:"Taste, culture, social influence, cost, convenience, health concerns, advertising"},
-  {q:"Bacteria spread via coughing/sneezing?", options:["E.coli","Salmonella","Staphylococcus aureus","Listeria"], answer:"Staphylococcus aureus"},
-  {q:"Bottled vs tap water safety?", options:["Tap unsafe","Bottled unsafe","Both safe; tap regulated by EPA, bottled by FDA","Both unsafe"], answer:"Both safe; tap regulated by EPA, bottled by FDA"},
-  {q:"Foods carrying Salmonella?", options:["Raw eggs, poultry, meat, unpasteurized milk, produce","Cooked vegetables only","Bread","Cooked fish only"], answer:"Raw eggs, poultry, meat, unpasteurized milk, produce"},
-  {q:"Nutrition Facts panel components?", options:["Serving size, servings per container, calories, nutrients, %DV","Calories only","Serving size only","Vitamins only"], answer:"Serving size, servings per container, calories, nutrients, %DV"},
-  {q:"Define peristalsis.", options:["Wave-like muscular contractions moving food","Chewing","Swallowing","Mixing food"], answer:"Wave-like muscular contractions moving food"},
-  {q:"Clostridium botulinum develops due to?", options:["Improperly canned/preserved anaerobic foods","Boiling water","Refrigeration","Freezing"], answer:"Improperly canned/preserved anaerobic foods"},
-  {q:"Enzymes in body?", options:["Catalysts like amylase, lipase, protease","Only vitamins","Only minerals","Water"], answer:"Catalysts like amylase, lipase, protease"},
-  {q:"Digestion begins where?", options:["Mouth with salivary amylase","Stomach only","Small intestine only","Large intestine only"], answer:"Mouth with salivary amylase"},
-  {q:"Foods to prevent constipation?", options:["High-fiber foods: whole grains, fruits, vegetables, legumes","Meat","Candy","White bread"], answer:"High-fiber foods: whole grains, fruits, vegetables, legumes"},
-  {q:"Gallbladder removal effect?", options:["Bile released continuously, fat digestion less efficient","No effect","Fat digestion improves","Protein digestion fails"], answer:"Bile released continuously, fat digestion less efficient"},
-  {q:"Secretin function?", options:["Stimulates pancreas to release bicarbonate","Stimulates liver","Stimulates brain","Stimulates gallbladder"], answer:"Stimulates pancreas to release bicarbonate"},
-  {q:"Examples of essential fatty acids?", options:["Linoleic acid (omega-6), alpha-linolenic acid (omega-3)","Saturated fats only","Trans fats only","Cholesterol only"], answer:"Linoleic acid (omega-6), alpha-linolenic acid (omega-3)"},
-  {q:"Controllable heart disease risk factors?", options:["Diet, physical activity, smoking, weight, blood pressure, cholesterol, blood sugar","Age only","Genetics only","None"], answer:"Diet, physical activity, smoking, weight, blood pressure, cholesterol, blood sugar"},
-  {q:"Sucrase function?", options:["Breaks down sucrose into glucose and fructose","Breaks down protein","Breaks down fat","Breaks down starch"], answer:"Breaks down sucrose into glucose and fructose"},
-  {q:"Carbohydrates primary function?", options:["Provide energy","Provide hormones","Provide insulation","Provide vitamins"], answer:"Provide energy"},
-  {q:"Muscle vs liver glycogen usage?", options:["Muscle: exercise; Liver: blood glucose maintenance","Both same","Only liver","Only muscle"], answer:"Muscle: exercise; Liver: blood glucose maintenance"},
-  {q:"Examples of saturated fatty acids?", options:["Butter, cheese, red meat, coconut oil, palm oil","Olive oil, canola oil","Fish oil","Vegetables"], answer:"Butter, cheese, red meat, coconut oil, palm oil"},
-  {q:"Normal blood cholesterol?", options:["<200 mg/dL","200-239 mg/dL","240+ mg/dL","Any value"], answer:"<200 mg/dL"},
-  {q:"Calories per gram of carbohydrates?", options:["4 kcal/g","9 kcal/g","7 kcal/g","1 kcal/g"], answer:"4 kcal/g"},
-  {q:"Primary cause of lactose intolerance?", options:["Lactase enzyme deficiency","Glucose deficiency","Fructose intolerance","Protein deficiency"], answer:"Lactase enzyme deficiency"},
-  {q:"Foods with monounsaturated fatty acids?", options:["Olive oil, canola oil, avocado, nuts, seeds","Butter","Red meat","Sugar"], answer:"Olive oil, canola oil, avocado, nuts, seeds"},
-  {q:"Cholesterol definition?", options:["Waxy fat-like substance found in animal foods and liver, essential for membranes, hormones, bile","Protein","Carb","Vitamin"], answer:"Waxy fat-like substance found in animal foods and liver, essential for membranes, hormones, bile"},
-  {q:"Insulin made where?", options:["Pancreas","Liver","Kidney","Heart"], answer:"Pancreas"},
-  {q:"AHA dietary fat recommendations?", options:["Limit saturated fat <10%, avoid trans fats, replace with unsaturated fats","Eat unlimited fat","Only avoid carbs","Eat only protein"], answer:"Limit saturated fat <10%, avoid trans fats, replace with unsaturated fats"},
-  {q:"Hyperglycemia vs hypoglycemia?", options:["Hyper: high blood glucose; Hypo: low blood glucose","Both high","Both low","No difference"], answer:"Hyper: high blood glucose; Hypo: low blood glucose"},
-  {q:"Diverticula definition?", options:["Small pouches in colon; diverticulosis: presence; diverticulitis: inflammation/infection","Only pouches","Only inflammation","Only colon cancer"], answer:"Small pouches in colon; diverticulosis: presence; diverticulitis: inflammation/infection"},
-  {q:"Food sources of dietary fiber?", options:["Whole grains, fruits, vegetables, legumes, nuts, seeds","Meat","Sugar","Oil"], answer:"Whole grains, fruits, vegetables, legumes, nuts, seeds"},
-  {q:"Main form of dietary lipid?", options:["Triglycerides","Cholesterol","Protein","Starch"], answer:"Triglycerides"},
-  {q:"Ketosis caused by?", options:["Low carbohydrate intake or fasting, body produces ketone bodies","High carb intake","Protein overload","Vitamin deficiency"], answer:"Low carbohydrate intake or fasting, body produces ketone bodies"},
-];
+        <ol class="questions" id="questionsList">
+          <!-- Questions inserted by JavaScript -->
+        </ol>
 
-// Shuffle questions
-questions.sort(() => Math.random() - 0.5);
+        <footer>
+          <div class="print-warning">Tip: Use the print button to generate a paper/PDF-friendly version. Answers will be included/hidden based on the "Show Answers" toggle.</div>
+        </footer>
+      </section>
 
-let current = 0;
-let score = 0;
+      <aside class="toc card">
+        <h3>Quick Navigation</h3>
+        <ul id="navList"></ul>
+        <hr style="margin:12px 0;border:0;border-top:1px solid #eef6f6">
+        <div>
+          <strong>Tools</strong>
+          <p style="margin:6px 0;color:var(--muted);font-size:0.9rem">Toggle answers, search, print, or copy the exam text.</p>
+          <button id="copyBtn" class="ghost">Copy Exam Text</button>
+        </div>
+      </aside>
+    </main>
+  </div>
 
-function loadQuestion() {
-  if(current >= questions.length){
-    document.getElementById("quiz-container").innerHTML = `<h2>Quiz Complete!</h2><p>Your score: ${score} / ${questions.length}</p>`;
-    return;
-  }
+  <script>
+    // Questions & answers data (from the provided PDF)
+    const qa = [
+      {q: 'What are the causes of night blindness in alcoholics?', a: 'Vitamin A deficiency due to impaired absorption and liver damage.'},
+      {q: 'What is the definition of metabolism?', a: 'The sum of all chemical reactions that occur within the body to maintain life.'},
+      {q: 'What are the definition of the two types of metabolism: aerobic and anaerobic?', a: 'Aerobic metabolism requires oxygen to produce ATP; anaerobic metabolism produces ATP without oxygen and yields lactic acid.'},
+      {q: 'What are the results of starving or starvation?', a: 'Muscle wasting, decreased metabolic rate, nutrient deficiencies, and eventual organ failure.'},
+      {q: 'What is energy vs expenditure balances?', a: 'Energy intake from food equals energy used for basal metabolism, activity, and thermogenesis.'},
+      {q: 'What is the basal metabolism in men vs women?', a: 'Men generally have a higher basal metabolic rate due to greater lean body mass.'},
+      {q: 'What is the definition of BMI?', a: 'Body Mass Index = weight (kg) / height (m²), a measure used to classify underweight/overweight.'},
+      {q: 'What is the Calories in 1 pound of fat?', a: 'Approximately 3,500 kcal.'},
+      {q: 'What is the definition anorexia nervosa?', a: 'An eating disorder characterized by self-starvation and intense fear of gaining weight.'},
+      {q: 'What are the cause of thermoregulation in anorexia nervosa individuals?', a: 'Impaired thermoregulation due to loss of body fat and reduced metabolic rate causing sensitivity to cold.'},
+      {q: 'What are the benefits of exercise?', a: 'Improves cardiovascular health, increases metabolism, strengthens muscles and bones, and supports mental health.'},
+      {q: 'What is the predominate fuel for exercise?', a: 'Carbohydrates (glucose and glycogen).'},
+      {q: 'Where is glucose stored?', a: 'In the liver and skeletal muscle as glycogen.'},
+      {q: 'What is storing glycogen regimen known as?', a: 'Carbohydrate loading.'},
+      {q: 'What does fluid consumption during exercise look like?', a: 'Drink before, during, and after exercise; use sports drinks for prolonged activity to replace electrolytes.'},
+      {q: 'What is the definition of hyponatremia and its causes?', a: 'Low blood sodium usually caused by excessive water intake and sodium loss through sweat.'},
+      {q: 'What are conditions associated with alcoholism?', a: 'Liver disease (cirrhosis), pancreatitis, neuropathy, malnutrition, Wernicke–Korsakoff, vitamin deficiencies.'},
+      {q: 'What does the dietary protein intake look like for Americans?', a: 'Americans typically consume more protein than the RDA; intake often exceeds requirements.'},
+      {q: 'What is the definition of amino acids?', a: 'Organic compounds that combine to form proteins; contain an amino group and carboxyl group.'},
+      {q: 'Which organ is responsible for ethanol metabolism?', a: 'The liver.'},
+      {q: 'How does alcohol consumption effect pregnancy?', a: 'Can cause fetal alcohol spectrum disorders (FASD), growth restriction, and congenital abnormalities.'},
+      {q: 'What are sources of protein?', a: 'Meat, poultry, fish, eggs, dairy, legumes, nuts, and soy products.'},
+      {q: 'Where are fat-soluble vitamins stored?', a: 'In the liver and adipose tissue.'},
+      {q: 'What is the essential nutrient for blood clotting?', a: 'Vitamin K.'},
+      {q: 'How are water soluble vitamin excreted?', a: 'They are generally excreted in urine and are not stored in large amounts.'},
+      {q: 'What are vitamin D sources and how is it utilized in the body?', a: 'Synthesized in skin from sunlight; found in fortified foods and fatty fish; promotes calcium absorption and bone health.'},
+      {q: 'What are indications of Thiamin therapy?', a: 'Treatment or prevention of beriberi and Wernicke–Korsakoff syndrome, particularly in alcoholics.'},
+      {q: 'What are indications for folate need?', a: 'Pregnancy (neural tube defect prevention), anemia, and increased cell division.'},
+      {q: 'What are food sources for Vitamin D?', a: 'Fortified dairy and cereals, fatty fish (salmon, tuna), egg yolks.'},
+      {q: 'What are food sources for Vitamin C?', a: 'Citrus fruits, strawberries, bell peppers, broccoli, and tomatoes.'},
+      {q: 'Vitamin A deficiency leads to what disorders?', a: 'Night blindness, xerophthalmia, and keratinization of epithelial tissues.'},
+      {q: 'What are sources of Iron?', a: 'Red meat, poultry, fish, lentils, spinach, and fortified cereals.'},
+      {q: 'Iodide deficiency leads to what disorders?', a: 'Goiter and developmental problems (cretinism) in severe deficiency.'},
+      {q: 'What is the sodium amount in salt?', a: 'Table salt (NaCl) is about 40% sodium by weight.'},
+      {q: 'Vitamin C deficiency leads to what disorders?', a: 'Scurvy — bleeding gums, pinpoint hemorrhages, poor wound healing, and fatigue.'},
+      {q: 'What are the sources of vitamin B12?', a: 'Animal products such as meat, fish, eggs, milk; fortified foods for vegetarians.'},
+      {q: 'How many Calories are in alcohol?', a: '7 calories per gram.'},
+      {q: 'How many Calories are in protein?', a: '4 calories per gram.'},
+      {q: 'What are the sources of essential amino acids?', a: 'Complete proteins (animal sources, soy) or combining plant proteins (e.g., rice + beans).'},
+      {q: 'What is the definition of marasmus?', a: 'Severe protein-energy malnutrition characterized by wasting of fat and muscle.'},
+      {q: 'What is the control center of satiety?', a: 'The hypothalamus (particularly the arcuate nucleus).'},
+      {q: 'What is energy expenditure total?', a: 'Total energy expenditure = basal metabolic rate + physical activity energy + thermic effect of food.'},
+      {q: 'What is the definition of catabolic metabolism?', a: 'Metabolic pathways that break down molecules to release energy.'},
+      {q: 'What are weight loss strategies?', a: 'Caloric deficit through diet, increased physical activity, behavior changes, and medical interventions when appropriate.'},
+      {q: 'What are sources for Vitamin E?', a: 'Vegetable oils, nuts, seeds, and green leafy vegetables.'},
+      {q: 'What are methods that destroy water soluble vitamins?', a: 'Heat, prolonged cooking, leaching in water, and exposure to light/oxygen.'},
+      {q: 'What are forms of zinc intake?', a: 'Dietary sources include meat, shellfish, legumes, nuts, and fortified cereals; supplements available as zinc gluconate, sulfate, or picolinate.'},
+      {q: 'What are indications for Vitamin K need?', a: 'Newborn prophylaxis, bleeding disorders, or deficiency due to malabsorption or medication (e.g., warfarin reversal).'},
+      {q: 'What are treatment to lower LDL cholesterol?', a: 'Lifestyle: reduce saturated/trans fats, increase soluble fiber, exercise; medications include statins, ezetimibe, PCSK9 inhibitors.'},
+      {q: 'How should products containing riboflavin be stored?', a: 'Stored away from light in opaque containers because riboflavin is light-sensitive.'}
+    ];
 
-  const q = questions[current];
-  let html = `<div class="question"><strong>Question ${current + 1}:</strong> ${q.q}</div>`;
-  q.options.forEach(opt => {
-    html += `<button class="option" onclick="checkAnswer('${opt}')">${opt}</button>`;
-  });
-  html += `<div class="feedback" id="feedback"></div>`;
-  document.getElementById("quiz-container").innerHTML = html;
-}
+    const list = document.getElementById('questionsList');
+    const nav = document.getElementById('navList');
 
-function checkAnswer(selected) {
-  const correct = questions[current].answer;
-  const feedback = document.getElementById("feedback");
+    qa.forEach((item, idx) => {
+      const li = document.createElement('li');
+      li.id = `q${idx+1}`;
+      li.innerHTML = `<div class="question-text">${idx+1}. ${escapeHtml(item.q)}</div>` +
+                     `<div class="answer" data-index="${idx}">${escapeHtml(item.a)}</div>`;
+      list.appendChild(li);
 
-  if(selected === correct){
-    feedback.innerHTML = "✅ Correct!";
-    score++;
-  } else {
-    feedback.innerHTML = `❌ Incorrect. Correct answer: ${correct}`;
-  }
+      const navItem = document.createElement('li');
+      navItem.innerHTML = `<a href="#q${idx+1}">${idx+1}. ${short(item.q)}</a>`;
+      nav.appendChild(navItem);
+    });
 
-  current++;
-  setTimeout(loadQuestion, 1500);
-}
+    // Utilities
+    function escapeHtml(s){ return s.replace(/[&<>\"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    function short(s){ return s.length>40 ? s.slice(0,40)+'...' : s }
 
-loadQuestion();
-</script>
+    // Toggle answers
+    const toggleBtn = document.getElementById('toggleAnswers');
+    let showing = false;
+    toggleBtn.addEventListener('click', ()=>{
+      showing = !showing;
+      document.querySelectorAll('.answer').forEach(el=> el.classList.toggle('visible', showing));
+      toggleBtn.textContent = showing ? 'Hide Answers' : 'Show Answers';
+    });
 
+    // Search
+    const searchBox = document.getElementById('searchBox');
+    const clearBtn = document.getElementById('clearSearch');
+    searchBox.addEventListener('input', ()=>{
+      const term = searchBox.value.trim().toLowerCase();
+      filter(term);
+    });
+    clearBtn.addEventListener('click', ()=>{ searchBox.value=''; filter(''); searchBox.focus(); });
+
+    function filter(term){
+      qa.forEach((item, i)=>{
+        const li = document.getElementById('q'+(i+1));
+        const text = (item.q + ' ' + item.a).toLowerCase();
+        const match = term === '' || text.includes(term);
+        li.style.display = match ? '' : 'none';
+      });
+    }
+
+    // Print button
+    document.getElementById('printBtn').addEventListener('click', ()=>{
+      // For print, ensure answers are visible if the toggle is on
+      const prev = document.querySelectorAll('.answer');
+      // Open print dialog
+      window.print();
+    });
+
+    // Copy exam text
+    document.getElementById('copyBtn').addEventListener('click', async ()=>{
+      let text = 'Nutrition Exam 2 — Questions & Answers\n\n';
+      qa.forEach((item, i)=>{
+        text += (i+1)+'. '+item.q + '\n';
+        if(showing) text += 'Answer: '+item.a + '\n\n'; else text += '\n';
+      });
+      try{ await navigator.clipboard.writeText(text); alert('Exam copied to clipboard.'); } catch(e){ alert('Copy failed — select and copy manually.'); }
+    });
+
+    // Accessibility: allow clicking question to toggle its answer
+    list.addEventListener('click', e=>{
+      const li = e.target.closest('li');
+      if(!li) return;
+      const ans = li.querySelector('.answer');
+      if(!ans) return;
+      ans.classList.toggle('visible');
+    });
+
+    // Keyboard shortcut: 'a' toggles answers
+    window.addEventListener('keydown', e=>{
+      if(e.key==='a' && (e.ctrlKey||e.metaKey)){
+        e.preventDefault(); toggleBtn.click();
+      }
+    });
+  </script>
 </body>
 </html>
