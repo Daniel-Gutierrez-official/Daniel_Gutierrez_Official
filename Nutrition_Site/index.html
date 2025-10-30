@@ -17,6 +17,8 @@
     .results{text-align:center;margin-top:2rem;display:none;}
     .results h2{color:#0ea5a4;}
     .score{font-size:1.2rem;margin:1rem 0;}
+    .correct{background:#d1fae5;border-radius:4px;padding:4px;}
+    .incorrect{background:#fee2e2;border-radius:4px;padding:4px;}
   </style>
 </head>
 <body>
@@ -28,6 +30,7 @@
   <div class="results" id="results">
     <h2>Your Review Is Complete!</h2>
     <p class="score" id="scoreText"></p>
+    <button id="showAnswersBtn">Show Correct Answers</button>
     <button onclick="restartQuiz()">Restart Review</button>
   </div>
 
@@ -86,31 +89,33 @@
     ];
 
     const quizDiv = document.getElementById('quiz');
+    const showAnswersBtn = document.getElementById('showAnswersBtn');
+    let shuffledQuestions = [];
 
     function shuffle(array) {
       return array.sort(() => Math.random() - 0.5);
     }
 
     function buildQuiz(){
-      const shuffledQuestions = shuffle([...questions]);
+      shuffledQuestions = shuffle([...questions]);
       quizDiv.innerHTML='';
       shuffledQuestions.forEach((item,i)=>{
         const div=document.createElement('div');
         div.className='question';
         const allOptions = shuffle([item.correct, ...item.incorrect]);
         div.innerHTML=`<h3>${i+1}. ${item.q}</h3><div class="options">
-          ${allOptions.map((opt,j)=>`<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>`).join('')}
+          ${allOptions.map(opt=>`<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>`).join('')}
         </div>`;
         quizDiv.appendChild(div);
       });
       const submitBtn=document.createElement('button');
       submitBtn.textContent='Finish Review';
       submitBtn.style.marginTop='1rem';
-      submitBtn.onclick=()=>finishReview(shuffledQuestions);
+      submitBtn.onclick=()=>finishReview();
       quizDiv.appendChild(submitBtn);
     }
 
-    function finishReview(shuffledQuestions){
+    function finishReview(){
       let score = 0;
       shuffledQuestions.forEach((q,i)=>{
         const selected = document.querySelector(`input[name="q${i}"]:checked`);
@@ -119,10 +124,27 @@
       document.getElementById('scoreText').textContent = `You scored ${score} out of ${shuffledQuestions.length}`;
       document.getElementById('results').style.display='block';
       document.getElementById('results').scrollIntoView({behavior:'smooth'});
+      showAnswersBtn.onclick = () => showCorrectAnswers();
+    }
+
+    function showCorrectAnswers(){
+      shuffledQuestions.forEach((q,i)=>{
+        const options = document.querySelectorAll(`input[name="q${i}"]`);
+        options.forEach(opt=>{
+          const label = opt.parentElement;
+          label.classList.remove('correct','incorrect');
+          if(opt.value === q.correct) label.classList.add('correct');
+          else if(opt.checked) label.classList.add('incorrect');
+        });
+      });
+      showAnswersBtn.disabled = true;
+      showAnswersBtn.textContent = "Answers Shown ✓";
     }
 
     function restartQuiz(){
       document.getElementById('results').style.display='none';
+      showAnswersBtn.disabled = false;
+      showAnswersBtn.textContent = "Show Correct Answers";
       buildQuiz();
     }
 
