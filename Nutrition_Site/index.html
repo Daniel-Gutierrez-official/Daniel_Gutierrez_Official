@@ -19,6 +19,10 @@
     .score{font-size:1.2rem;margin:1rem 0;}
     .correct{background:#d1fae5;border-radius:4px;padding:4px;}
     .incorrect{background:#fee2e2;border-radius:4px;padding:4px;}
+    .history{margin-top:1.5rem;text-align:center;}
+    .history h3{color:#0ea5a4;margin-bottom:0.5rem;}
+    .history ul{list-style:none;padding:0;margin:0;}
+    .history li{background:#f1f5f9;border-radius:6px;margin:4px auto;padding:6px;width:70%;font-size:0.95rem;}
   </style>
 </head>
 <body>
@@ -27,11 +31,17 @@
     <p>Test yourself on Chapters 7–13</p>
   </header>
   <main id="quiz"></main>
+
   <div class="results" id="results">
     <h2>Your Review Is Complete!</h2>
     <p class="score" id="scoreText"></p>
     <button id="showAnswersBtn">Show Correct Answers</button>
     <button onclick="restartQuiz()">Restart Review</button>
+
+    <div class="history" id="history">
+      <h3>Your Score History</h3>
+      <ul id="scoreHistoryList"></ul>
+    </div>
   </div>
 
   <script>
@@ -90,11 +100,10 @@
 
     const quizDiv = document.getElementById('quiz');
     const showAnswersBtn = document.getElementById('showAnswersBtn');
+    const scoreHistoryList = document.getElementById('scoreHistoryList');
     let shuffledQuestions = [];
 
-    function shuffle(array) {
-      return array.sort(() => Math.random() - 0.5);
-    }
+    function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
 
     function buildQuiz(){
       shuffledQuestions = shuffle([...questions]);
@@ -124,7 +133,8 @@
       document.getElementById('scoreText').textContent = `You scored ${score} out of ${shuffledQuestions.length}`;
       document.getElementById('results').style.display='block';
       document.getElementById('results').scrollIntoView({behavior:'smooth'});
-      showAnswersBtn.onclick = () => showCorrectAnswers();
+      saveScore(score);
+      showHistory();
     }
 
     function showCorrectAnswers(){
@@ -148,7 +158,24 @@
       buildQuiz();
     }
 
+    function saveScore(score){
+      const date = new Date().toLocaleString();
+      const record = {score: score, total: shuffledQuestions.length, date};
+      const history = JSON.parse(localStorage.getItem('nutritionExamScores') || '[]');
+      history.unshift(record);
+      if(history.length > 5) history.pop(); // keep last 5
+      localStorage.setItem('nutritionExamScores', JSON.stringify(history));
+    }
+
+    function showHistory(){
+      const history = JSON.parse(localStorage.getItem('nutritionExamScores') || '[]');
+      scoreHistoryList.innerHTML = history.length === 0 ? '<li>No past attempts yet.</li>' :
+        history.map(h=>`<li>${h.date} — ${h.score}/${h.total}</li>`).join('');
+    }
+
+    showAnswersBtn.onclick = () => showCorrectAnswers();
     buildQuiz();
+    showHistory();
   </script>
 </body>
 </html>

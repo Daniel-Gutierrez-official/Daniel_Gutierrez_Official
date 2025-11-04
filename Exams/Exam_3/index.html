@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Exam 3 Review Quiz</title>
+<style>
+:root {
+  --bg: #336d34;
+  --card: #1f2836;
+  --accent: #e2e2e2;
+  --muted: #becddc;
+  font-family: "Inter", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: linear-gradient(180deg,#071022,#081327);
+  color: #e5eef6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+.quiz-container {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 24px;
+  max-width: 720px;
+  width: 100%;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+h1 { color: var(--accent); text-align: center; margin-top: 0; }
+.question-number {
+  color: var(--muted);
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+.question-text {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.option {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.option:hover {
+  background: rgba(255,255,255,0.08);
+}
+.option.correct { border-color: #22c55e; }
+.option.wrong { border-color: #ef4444; }
+.scoreboard {
+  margin-top: 12px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--accent);
+}
+.next-btn, .restart-btn {
+  margin-top: 20px;
+  background: var(--accent);
+  border: none;
+  color: #000;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.hidden { display: none; }
+.result-screen {
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="quiz-container">
+  <h1>Exam 3 Review Quiz</h1>
+  <div id="quiz">
+    <div id="questionBox">
+      <div class="question-number" id="questionNumber"></div>
+      <div class="question-text" id="questionText"></div>
+      <div class="options" id="options"></div>
+      <div class="scoreboard" id="scoreBoard"></div>
+      <button id="nextBtn" class="next-btn hidden">Next →</button>
+    </div>
+    <div id="resultBox" class="result-screen hidden">
+      <h2>Quiz Complete!</h2>
+      <p id="finalScore"></p>
+      <button id="restartBtn" class="restart-btn">Restart Quiz</button>
+    </div>
+  </div>
+</div>
+<script>
+
+  /********************
+ * CORE QUIZ LOGIC
+ ********************/
+
+// --- Create and attach progress bar ---
+const quizContainer = document.querySelector('.quiz-container');
+const progressBar = document.createElement('div');
+progressBar.style.width = '100%';
+progressBar.style.background = 'rgba(255,255,255,0.05)';
+progressBar.style.height = '12px';
+progressBar.style.borderRadius = '8px';
+progressBar.style.margin = '10px 0 18px';
+const progressFill = document.createElement('div');
+progressFill.style.height = '100%';
+progressFill.style.width = '0%';
+progressFill.style.background = 'var(--accent)';
+progressFill.style.borderRadius = 'inherit';
+progressBar.appendChild(progressFill);
+quizContainer.insertBefore(progressBar, document.getElementById('quiz'));
+
+// --- DOM elements ---
+const questionNumberEl = document.getElementById('questionNumber');
+const questionTextEl = document.getElementById('questionText');
+const optionsEl = document.getElementById('options');
+const scoreBoardEl = document.getElementById('scoreBoard');
+const nextBtn = document.getElementById('nextBtn');
+const resultBox = document.getElementById('resultBox');
+const questionBox = document.getElementById('questionBox');
+const finalScoreEl = document.getElementById('finalScore');
+const restartBtn = document.getElementById('restartBtn');
+
+// --- State variables ---
+let shuffledQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+
+/********************
+ * HELPER FUNCTIONS
+ ********************/
+function shuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function updateProgress() {
+  const pct = ((currentIndex) / shuffledQuestions.length) * 100;
+  progressFill.style.width = pct + '%';
+}
+
+function showQuestion() {
+  answered = false;
+  nextBtn.classList.add('hidden');
+  const q = shuffledQuestions[currentIndex];
+  questionNumberEl.textContent = `Question ${currentIndex + 1} of ${shuffledQuestions.length}`;
+  questionTextEl.textContent = q.q;
+  optionsEl.innerHTML = '';
+  const shuffledOptions = shuffle(q.options);
+  shuffledOptions.forEach(opt => {
+    const btn = document.createElement('div');
+    btn.className = 'option';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => selectAnswer(btn, q.correct));
+    optionsEl.appendChild(btn);
+  });
+  scoreBoardEl.textContent = `Score: ${score}/${currentIndex}`;
+  updateProgress();
+}
+
+function selectAnswer(selectedBtn, correctAnswer) {
+  if (answered) return;
+  answered = true;
+  const allBtns = document.querySelectorAll('.option');
+  allBtns.forEach(btn => {
+    if (btn.textContent === correctAnswer) btn.classList.add('correct');
+    else if (btn === selectedBtn) btn.classList.add('wrong');
+    btn.style.pointerEvents = 'none';
+  });
+  if (selectedBtn.textContent === correctAnswer) score++;
+  scoreBoardEl.textContent = `Score: ${score}/${currentIndex + 1}`;
+  nextBtn.classList.remove('hidden');
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex < shuffledQuestions.length) {
+    showQuestion();
+  } else {
+    endQuiz();
+  }
+}
+
+function endQuiz() {
+  questionBox.classList.add('hidden');
+  resultBox.classList.remove('hidden');
+  progressFill.style.width = '100%';
+  finalScoreEl.textContent = `You scored ${score} out of ${shuffledQuestions.length}!`;
+}
+
+function startQuiz() {
+  shuffledQuestions = shuffle(questions);
+  currentIndex = 0;
+  score = 0;
+  questionBox.classList.remove('hidden');
+  resultBox.classList.add('hidden');
+  showQuestion();
+}
+
+nextBtn.addEventListener('click', nextQuestion);
+restartBtn.addEventListener('click', startQuiz);
+
+/********************
+ * FULL QUESTION SET (202 items)
+ * Each object: { q: "...", correct: "...", options: [...] }
+ ********************/
+
+const questions = [
+  { q: "What are 2 systems that the circulatory system is subdivided into?", correct: "Cardiovascular system and lymphatic system", options: ["Cardiovascular system and lymphatic system", "Respiratory and endocrine systems", "Nervous and skeletal systems", "Digestive and urinary systems"] },
+
+  { q: "The cardiovascular system is composed of:", correct: "Heart, blood vessels, and blood", options: ["Heart, blood vessels, and blood", "Lymph nodes, lymph vessels, and lymph", "Lungs, trachea, and bronchi", "Kidneys, ureters, and bladder"] },
+
+  { q: "While the lymphatic system is composed of:", correct: "Lymphatic vessels and lymph fluid", options: ["Lymphatic vessels and lymph fluid", "Arteries and veins", "Bronchi and bronchioles", "Nephrons and collecting ducts"] },
+
+  { q: "What are 5 major functions of the cardiovascular system?", correct: "Transport of gases, nutrients, wastes, hormones, and immune cells", options: ["Transport of gases, nutrients, wastes, hormones, and immune cells", "Production of digestive enzymes, bile, insulin, glucagon, and saliva", "Generation of action potentials, reflex arcs, and sensation", "Structural support, protection, mineral storage, blood cell formation, and leverage"] },
+
+  { q: "What are the 2 circuits discussed for the blood pathway; describe general flow for each?", correct: "Pulmonary—heart ⇄ lungs; Systemic—heart ⇄ body tissues", options: ["Pulmonary—heart ⇄ lungs; Systemic—heart ⇄ body tissues", "Portal—liver ⇄ stomach; Coronary—kidney ⇄ heart", "Renal—heart ⇄ kidneys; Lymphatic—tissues ⇄ lymph nodes", "Hepatic—liver ⇄ pancreas; Cutaneous—skin ⇄ sweat glands"] },
+
+  { q: "What is the approximate time it takes blood to complete each circuit?", correct: "About 1 minute", options: ["About 1 minute", "About 10 seconds", "About 30 minutes", "About 2 hours"] },
+
+  { q: "What is the approximate size of the heart?", correct: "About the size of a fist", options: ["About the size of a fist", "About the size of an apple", "About the size of a melon", "About the size of a grain of rice"] },
+
+  { q: "Where is the heart located in the body?", correct: "Between the lungs behind the sternum, left of midline (mediastinum)", options: ["Between the lungs behind the sternum, left of midline (mediastinum)", "Directly under the liver in the abdominal cavity", "Centered inside the skull", "In the pelvic cavity next to bladder"] },
+
+  { q: "How many chambers are in the heart and their names?", correct: "Four: right atrium, right ventricle, left atrium, left ventricle", options: ["Four: right atrium, right ventricle, left atrium, left ventricle", "Two: left chamber and right chamber", "Three: atrium, ventricle, sinus", "Five: two atria, two ventricles, one auricle"] },
+
+  { q: "Which are the two receiving chambers of the heart?", correct: "Right atrium and left atrium", options: ["Right atrium and left atrium", "Right ventricle and left ventricle", "Aortic sinus and pulmonary trunk", "SVC and IVC"] },
+
+  { q: "Which are the two pumping chambers of the heart?", correct: "Right ventricle and left ventricle", options: ["Right ventricle and left ventricle", "Right atrium and left atrium", "Pulmonary artery and aorta", "Superior and inferior vena cava"] },
+
+  { q: "Describe gases transported by each side of the heart.", correct: "Right side carries O₂-poor/CO₂-rich blood to lungs; left side carries O₂-rich/CO₂-poor blood to body", options: ["Right side carries O₂-poor/CO₂-rich blood to lungs; left side carries O₂-rich/CO₂-poor blood to body", "Both sides carry only oxygen-rich blood", "Left side carries CO₂-rich blood to lungs; right side carries O₂-rich blood to body", "Heart does not transport gases — only kidneys do"] },
+
+  { q: "How does gas exchange occur at the heart level?", correct: "At capillary beds: lungs (CO₂ out, O₂ in) and systemic tissues (O₂ out, CO₂ in)", options: ["At capillary beds: lungs (CO₂ out, O₂ in) and systemic tissues (O₂ out, CO₂ in)", "Inside the heart chambers via heart valves", "Across the pericardium", "Directly through red blood cells in the aorta only"] },
+
+  { q: "Blood is known as a:", correct: "Transport medium", options: ["Transport medium", "Digestive enzyme", "Structural protein", "Hormonal gland"] },
+
+  { q: "What are the 3 types of blood vessels?", correct: "Arteries/arterioles, capillaries, veins/venules", options: ["Arteries/arterioles, capillaries, veins/venules", "Bronchi, bronchioles, alveoli", "Tendons, ligaments, fascia", "Nephrons, glomeruli, collecting ducts"] },
+
+  { q: "Are blood vessels under voluntary or involuntary control?", correct: "Involuntary", options: ["Involuntary", "Voluntary", "Somatic control", "Conscious control only"] },
+
+  { q: "What is the vascular system?", correct: "The entire blood vessel system", options: ["The entire blood vessel system", "Only arteries", "Only veins", "Only the heart and lungs together"] },
+
+  { q: "Pattern of vessels leaving and returning to the heart?", correct: "Artery → arterioles → capillaries → venules → veins", options: ["Artery → arterioles → capillaries → venules → veins", "Vein → venule → capillary → arteriole → artery", "Capillary → artery → vein → arteriole", "Lymphatic vessel → capillary → artery"] },
+
+  { q: "Do arteries carry blood toward or away from the heart?", correct: "Away from the heart", options: ["Away from the heart", "Toward the heart", "Only toward lungs", "Only toward kidneys"] },
+
+  { q: "Blood in arteries usually has high or low O₂?", correct: "High O₂", options: ["High O₂", "Low O₂", "No oxygen", "Equal O₂ to veins always"] },
+
+  { q: "Which artery carries low O₂ blood?", correct: "Pulmonary artery", options: ["Pulmonary artery", "Aorta", "Coronary artery", "Femoral artery"] },
+
+  { q: "What is the pressure level of arteries relative to veins?", correct: "High pressure (e.g., ~95 mmHg)", options: ["High pressure (e.g., ~95 mmHg)", "Low pressure (~2 mmHg)", "No pressure", "Variable but always lower than capillaries"] },
+
+  { q: "Can gas exchange occur in arteries?", correct: "No", options: ["No", "Yes, primarily", "Only during exercise", "Only in pulmonary veins"] },
+
+  { q: "Are arteries muscular?", correct: "Yes", options: ["Yes", "No", "Only in capillaries", "Only in veins"] },
+
+  { q: "Why are arteries described as pulsatile?", correct: "Because pressure surges with each heartbeat producing a pulse", options: ["Because pressure surges with each heartbeat producing a pulse", "They expand and contract with digestion", "They only move during sleep", "They have valves like veins"] },
+
+  { q: "Where are capillaries found?", correct: "Between arterioles and venules, connecting arteries and veins", options: ["Between arterioles and venules, connecting arteries and veins", "Only inside the heart", "Only in skin", "Only in lymph nodes"] },
+
+  { q: "What is the size of capillaries?", correct: "Smallest blood vessels with one-cell thick walls", options: ["Smallest blood vessels with one-cell thick walls", "Thicker than arteries", "Same size as veins", "Microscopic but thicker than arterioles"] },
+
+  { q: "Can capillaries vasodilate or vasoconstrict?", correct: "No, they lack smooth muscle", options: ["No, they lack smooth muscle", "Yes, they have strong smooth muscle", "Only in disease", "Only in the lungs"] },
+
+  { q: "What is the pressure level in capillaries?", correct: "Low (~20 mmHg)", options: ["Low (~20 mmHg)", "High (~95 mmHg)", "Extremely high (~200 mmHg)", "Negative pressure"] },
+
+  { q: "Can gas exchange occur in capillaries?", correct: "Yes", options: ["Yes", "No", "Only in veins", "Only in arteries"] },
+
+  { q: "Where does O₂/CO₂ exchange happen?", correct: "Pulmonary and systemic capillary beds", options: ["Pulmonary and systemic capillary beds", "In the aorta only", "In the lymph nodes", "Inside red blood cells only"] },
+
+  { q: "Veins carry blood _______ the heart.", correct: "Toward the heart", options: ["Toward the heart", "Away from the heart", "Only to the lungs", "Only to the kidneys"] },
+
+  { q: "Usually blood in veins has high or low O₂?", correct: "Low O₂", options: ["Low O₂", "High O₂", "No O₂", "Always equal to arterial O₂"] },
+
+  { q: "What is the exception to veins usually carrying low O₂?", correct: "Pulmonary vein carries O₂-rich blood", options: ["Pulmonary vein carries O₂-rich blood", "Femoral vein carries O₂-rich blood", "Saphenous vein carries pure oxygen", "Hepatic vein carries oxygenated blood from lungs"] },
+
+  { q: "What is the pressure level in veins?", correct: "Low (~2 mmHg)", options: ["Low (~2 mmHg)", "High (~95 mmHg)", "Negative pressure below zero", "Extremely variable but always >100 mmHg"] },
+
+  { q: "Can gas exchange occur in veins?", correct: "No", options: ["No", "Yes extensively", "Only in pulmonary veins", "Only under pressure"] },
+
+  { q: "Do veins have smooth muscle?", correct: "Yes", options: ["Yes", "No", "Only in capillaries", "Only in arteries"] },
+
+  { q: "How do veins return blood to the heart?", correct: "Skeletal muscle pump and one-way valves", options: ["Skeletal muscle pump and one-way valves", "By contraction of artery walls", "Via cilia pushing blood", "Through pulmonary ventilation"] },
+
+  { q: "Blood is known as a:", correct: "Transport medium", options: ["Transport medium", "Enzymatic catalyst", "Hormone secreting fluid", "Structural framework"] },
+
+  { q: "Approximately how many liters of blood do men have?", correct: "5–6 liters", options: ["5–6 liters", "2–3 liters", "10–12 liters", "Less than 1 liter"] },
+
+  { q: "Approximately how many liters of blood do females have?", correct: "4–5 liters", options: ["4–5 liters", "6–7 liters", "2–3 liters", "8–9 liters"] },
+
+  { q: "Where is blood formed?", correct: "Red bone marrow", options: ["Red bone marrow", "Liver", "Spleen exclusively", "Lymph nodes only"] },
+
+  { q: "What is the process of blood formation called?", correct: "Hematopoiesis", options: ["Hematopoiesis", "Hemostasis", "Hematology", "Hemoglobinogenesis"] },
+
+  { q: "Blood is composed of which two main types of substances?", correct: "Plasma and formed elements", options: ["Plasma and formed elements", "Lymph and platelets", "Only cells", "Interstitial fluid and bile"] },
+
+  { q: "How could plasma be described?", correct: "Straw-colored, sticky fluid", options: ["Straw-colored, sticky fluid", "Clear and watery without proteins", "Solid gel", "Opaque white and fatty"] },
+
+  { q: "What does plasma contain?", correct: "Ions, nutrients, wastes, oxygen, hormones, vitamins, proteins", options: ["Ions, nutrients, wastes, oxygen, hormones, vitamins, proteins", "Only red blood cells", "Only water and sugar", "Only platelets and WBCs"] },
+
+  { q: "What are the three main types of formed elements and roles?", correct: "RBCs carry gases, platelets clot, WBCs defend", options: ["RBCs carry gases, platelets clot, WBCs defend", "RBCs fight infections, WBCs carry oxygen, platelets digest food", "Platelets provide energy, RBCs make hormones, WBCs store fat", "All formed elements are identical in function"] },
+
+  { q: "Path of blood through the heart beginning at SVC:", correct: "SVC/IVC → RA → tricuspid → RV → pulmonary valve → pulmonary artery → lungs → pulmonary vein → LA → mitral → LV → aortic valve → aorta", options: ["SVC/IVC → RA → tricuspid → RV → pulmonary valve → pulmonary artery → lungs → pulmonary vein → LA → mitral → LV → aortic valve → aorta", "Aorta → LV → mitral → LA → pulmonary artery → lungs", "RA → LA → RV → LV → aorta", "Pulmonary vein → lungs → pulmonary artery → RA"] },
+
+  { q: "Blood from the right side of the heart going to lungs carries what?", correct: "Deoxygenated blood", options: ["Deoxygenated blood", "Oxygenated blood", "Lymph fluid", "Pure plasma only"] },
+
+  { q: "What is the CO₂ level in blood going toward the lungs?", correct: "High CO₂", options: ["High CO₂", "Low CO₂", "No CO₂", "Identical CO₂ to pulmonary vein"] },
+
+  { q: "Gas exchange happens at the?", correct: "Alveoli and capillary beds", options: ["Alveoli and capillary beds", "Heart valves", "Spleen sinusoids", "Bone marrow cavities"] },
+
+  { q: "Blood from lungs going back to heart carries?", correct: "Oxygenated blood", options: ["Oxygenated blood", "Deoxygenated blood", "Lymph", "Bile"] },
+
+  { q: "What is the CO₂ level in blood going toward the heart from lungs?", correct: "Low CO₂", options: ["Low CO₂", "High CO₂", "No CO₂", "Very high CO₂ like venous blood"] },
+
+  { q: "What is a thrombus?", correct: "A blood clot forming and persisting in a vessel", options: ["A blood clot forming and persisting in a vessel", "A harmless air bubble in veins", "A fatty plaque only in the liver", "An immune cell type"] },
+
+  { q: "What is an embolus?", correct: "A clot that breaks free and travels in the bloodstream", options: ["A clot that breaks free and travels in the bloodstream", "A stationary thrombus", "A ruptured artery", "A lymphatic vessel"] },
+
+  { q: "What is anemia?", correct: "Low RBCs or hemoglobin leading to low O₂ carrying capacity", options: ["Low RBCs or hemoglobin leading to low O₂ carrying capacity", "Excess RBCs causing thick blood", "An infection of the bone marrow", "A clotting disorder causing thrombosis"] },
+
+  { q: "What is CAD (coronary artery disease)?", correct: "Narrowing/blockage of coronary arteries (atherosclerosis)", options: ["Narrowing/blockage of coronary arteries (atherosclerosis)", "Infection of the heart valves", "Inflammation of pericardium", "A congenital valve defect only"] },
+
+  { q: "Into what two main groups is the digestive system divided?", correct: "GI tract (alimentary canal) and accessory digestive organs", options: ["GI tract (alimentary canal) and accessory digestive organs", "Respiratory and cardiovascular systems", "Central and peripheral digestive systems", "Endocrine and exocrine divisions only"] },
+
+  { q: "What is the GI tract's other name?", correct: "Alimentary canal", options: ["Alimentary canal", "Vascular tube", "Neural tube", "Peritoneal canal"] },
+
+  { q: "What structures make up the GI tract?", correct: "Oral cavity, pharynx, esophagus, stomach, small intestine, large intestine", options: ["Oral cavity, pharynx, esophagus, stomach, small intestine, large intestine", "Liver, pancreas, spleen", "Lungs, bronchi, alveoli", "Kidneys, uterus, bladder"] },
+
+  { q: "Is the GI tract under voluntary or involuntary control?", correct: "Mostly involuntary (autonomic NS)", options: ["Mostly involuntary (autonomic NS)", "Entirely voluntary", "Controlled by somatic nerves only", "Controlled by endocrine only"] },
+
+  { q: "Which part of the GI tract has some voluntary control?", correct: "Oral cavity (chewing)", options: ["Oral cavity (chewing)", "Stomach churning", "Jejunum peristalsis", "Colon absorption"] },
+
+  { q: "Where does digestion begin?", correct: "In the oral cavity (mouth)", options: ["In the oral cavity (mouth)", "In the stomach only", "In the small intestine only", "In the liver"] },
+
+  { q: "What occurs in the oral cavity during digestion?", correct: "Food is chewed, mixed with saliva, formed into a bolus", options: ["Food is chewed, mixed with saliva, formed into a bolus", "Proteins are fully digested into amino acids", "Bile is produced", "Feces are formed"] },
+
+  { q: "What roles do teeth, lips, cheeks, saliva play in digestion?", correct: "Teeth grind; lips/cheeks keep food in; saliva moistens and starts digestion", options: ["Teeth grind; lips/cheeks keep food in; saliva moistens and starts digestion", "They secrete bile", "They regulate blood sugar", "They filter lymph fluid"] },
+
+  { q: "What is the function of the pharynx in digestion?", correct: "Passageway for food and air connecting oral cavity to esophagus", options: ["Passageway for food and air connecting oral cavity to esophagus", "Primary site of nutrient absorption", "Main organ of detoxification", "Produces saliva"] },
+
+  { q: "Through which regions does food pass in the pharynx?", correct: "Oropharynx and laryngopharynx", options: ["Oropharynx and laryngopharynx", "Nasopharynx only", "Trachea and bronchi", "Gastric and pyloric regions"] },
+
+  { q: "What is the function of the esophagus?", correct: "Transports food from pharynx to stomach", options: ["Transports food from pharynx to stomach", "Absorbs nutrients", "Secretes bile", "Stores feces"] },
+
+  { q: "What type of muscle does the esophagus contain?", correct: "Skeletal and smooth muscle", options: ["Skeletal and smooth muscle", "Only cardiac muscle", "Only smooth muscle throughout", "Only skeletal muscle throughout"] },
+
+  { q: "What is peristalsis?", correct: "Wave-like muscular contractions moving food through the tract", options: ["Wave-like muscular contractions moving food through the tract", "Chemical digestion by enzymes", "Passive diffusion of nutrients", "Production of stomach acid"] },
+
+  { q: "What prevents stomach contents from regurgitating into the esophagus?", correct: "Cardiac (lower esophageal) sphincter", options: ["Cardiac (lower esophageal) sphincter", "Pyloric sphincter", "Ileocecal valve", "Anal sphincter"] },
+
+  { q: "What is the main function of the stomach?", correct: "Mix food with gastric juices to form chyme and store temporarily", options: ["Mix food with gastric juices to form chyme and store temporarily", "Absorb most nutrients", "Filter toxins from blood", "Produce insulin"] },
+
+  { q: "How long does food generally remain in the stomach?", correct: "About 4 hours", options: ["About 4 hours", "Less than 10 minutes", "24–48 hours", "A week"] },
+
+  { q: "What happens to food in the stomach?", correct: "It is churned and mixed with pepsin and HCl to form chyme", options: ["It is churned and mixed with pepsin and HCl to form chyme", "Complete nutrient absorption occurs", "Protein is turned into glucose", "It becomes bile"] },
+
+  { q: "What is the partially digested food paste formed in the stomach called?", correct: "Chyme", options: ["Chyme", "Chyle", "Bolus", "Feces"] },
+
+  { q: "What are the four regions of the stomach?", correct: "Cardia, fundus, body, pyloric region", options: ["Cardia, fundus, body, pyloric region", "Duodenum, jejunum, ileum, cecum", "Ascending, transverse, descending, sigmoid", "Right lobe, left lobe, caudate, quadrate"] },
+
+  { q: "How does the stomach protect itself from acid?", correct: "Mucus coating and rapid epithelial regeneration", options: ["Mucus coating and rapid epithelial regeneration", "Bile secretion in stomach", "Keratinized wall", "Bone-like lining"] },
+
+  { q: "What is the main function of the small intestine?", correct: "Major site of digestion and nutrient absorption", options: ["Major site of digestion and nutrient absorption", "Storage of feces", "Detoxification", "Air filtration"] },
+
+  { q: "What are the three sections of the small intestine?", correct: "Duodenum, jejunum, ileum", options: ["Duodenum, jejunum, ileum", "Cecum, colon, rectum", "Fundus, body, pylorus", "Nasopharynx, oropharynx, laryngopharynx"] },
+
+  { q: "In which part does most nutrient absorption occur?", correct: "Jejunum", options: ["Jejunum", "Duodenum only", "Ileum only", "Stomach"] },
+
+  { q: "How does small intestine structure assist absorption?", correct: "Circular folds, villi, microvilli increase surface area", options: ["Circular folds, villi, microvilli increase surface area", "Thick muscular wall limits absorption", "Smooth interior with no folds", "Large lumen with no villi"] },
+
+  { q: "What is the main function of the large intestine?", correct: "Absorb water and electrolytes; form and expel feces", options: ["Absorb water and electrolytes; form and expel feces", "Produce digestive enzymes", "Absorb most nutrients", "Secrete insulin"] },
+
+  { q: "What are the parts of the large intestine?", correct: "Cecum, appendix, colon, rectum, anal canal", options: ["Cecum, appendix, colon, rectum, anal canal", "Duodenum, jejunum, ileum", "Stomach, fundus, pylorus", "Spleen, pancreas, liver"] },
+
+  { q: "What is the role of the appendix?", correct: "Contains lymphoid tissue and houses beneficial bacteria", options: ["Contains lymphoid tissue and houses beneficial bacteria", "Secretes bile", "Absorbs sugars", "Filters blood"] },
+
+  { q: "What is the overall function of accessory digestive organs?", correct: "Aid digestion by secreting enzymes, bile, or other substances", options: ["Aid digestion by secreting enzymes, bile, or other substances", "Store feces", "Make red blood cells", "Produce hormones only"] },
+
+  { q: "What are the six accessory digestive organs listed?", correct: "Teeth, tongue, salivary glands, liver, gallbladder, pancreas", options: ["Teeth, tongue, salivary glands, liver, gallbladder, pancreas", "Heart, lungs, spleen, kidneys, bladder, brain", "Appendix, cecum, colon, rectum, anus, sigmoid", "Lymph nodes, thymus, spleen, tonsils, bone marrow, peyer patches"] },
+
+  { q: "What role do teeth play in digestion?", correct: "Tear and grind food during chewing (mastication)", options: ["Tear and grind food during chewing (mastication)", "Secrete digestive enzymes", "Absorb fats", "Produce bile"] },
+
+  { q: "How many deciduous (baby) teeth do humans have?", correct: "20", options: ["20", "32", "12", "28"] },
+
+  { q: "How many permanent teeth do humans have?", correct: "32", options: ["32", "20", "28", "36"] },
+
+  { q: "What are functions of the tongue in digestion?", correct: "Moves and mixes food, forms bolus, aids swallowing and speech, contains taste buds", options: ["Moves and mixes food, forms bolus, aids swallowing and speech, contains taste buds", "Filters oxygen from air", "Absorbs nutrients into bloodstream", "Secretes insulin"] },
+
+  { q: "What is the function of saliva?", correct: "Moistens food, cleanses mouth, dissolves food, begins digestion, aids swallowing", options: ["Moistens food, cleanses mouth, dissolves food, begins digestion, aids swallowing", "Produces bile", "Stores vitamins", "Filters blood"] },
+
+  { q: "Where does digestion first begin?", correct: "In the mouth", options: ["In the mouth", "In the stomach", "In the small intestine", "In the liver"] },
+
+  { q: "What substances are found in saliva?", correct: "Salivary amylase, lipase, bicarbonate buffer, antibacterial substances, antibodies, proteins", options: ["Salivary amylase, lipase, bicarbonate buffer, antibacterial substances, antibodies, proteins", "Insulin and glucagon", "Bile salts and bilirubin", "Pepsin and hydrochloric acid"] },
+
+  { q: "What are the three major salivary glands and locations?", correct: "Parotid (anterior to ear), submandibular (below mandible), sublingual (under tongue)", options: ["Parotid (anterior to ear), submandibular (below mandible), sublingual (under tongue)", "Thyroid, parathyroid, thymus", "Liver, gallbladder, pancreas", "Adrenal, pituitary, pineal"] },
+
+  { q: "How many functions does the liver perform roughly?", correct: "Over 500", options: ["Over 500", "About 10", "Exactly 100", "Less than 5"] },
+
+  { q: "What are some main digestive-related functions of the liver?", correct: "Produces bile, detoxifies blood, processes nutrients, stores glycogen/vitamins, makes blood proteins", options: ["Produces bile, detoxifies blood, processes nutrients, stores glycogen/vitamins, makes blood proteins", "Produces digestive enzymes like pepsin", "Acts as a primary respiratory organ", "Stores oxygen only"] },
+
+  { q: "What substance does the liver produce and store in the gallbladder?", correct: "Bile", options: ["Bile", "Insulin", "Gastrin", "Pepsinogen"] },
+
+  { q: "How many lobes does the liver have?", correct: "Four", options: ["Four", "Two", "Three", "Five"] },
+
+  { q: "What are the names of the liver lobes?", correct: "Right, left, quadrate, and caudate", options: ["Right, left, quadrate, and caudate", "Superior, inferior, medial, lateral", "Anterior, posterior, central, marginal", "Upper, lower, inner, outer"] },
+
+  { q: "What are hepatocytes?", correct: "Liver cells performing most liver functions (bile production, detox, protein synthesis)", options: ["Liver cells performing most liver functions (bile production, detox, protein synthesis)", "Cells that line the intestine", "Red blood cells", "Pancreatic islet cells"] },
+
+  { q: "What unique property do hepatocytes have?", correct: "They can rapidly divide and regenerate", options: ["They can rapidly divide and regenerate", "They cannot divide once matured", "They produce insulin", "They store air"] },
+
+  { q: "What is the gallbladder and its role?", correct: "A sac under the liver that stores and concentrates bile", options: ["A sac under the liver that stores and concentrates bile", "A part of the kidney that filters blood", "A section of the small intestine that absorbs iron", "A lymph node near the stomach"] },
+
+  { q: "What is the pathway of bile from gallbladder to small intestine?", correct: "Gallbladder → cystic duct → common bile duct → duodenum", options: ["Gallbladder → cystic duct → common bile duct → duodenum", "Gallbladder → hepatic artery → jejunum", "Gallbladder → pancreatic duct → ileum", "Gallbladder → stomach → esophagus"] },
+
+  { q: "How do liver and gallbladder work together?", correct: "Liver produces bile; gallbladder stores and releases it into duodenum", options: ["Liver produces bile; gallbladder stores and releases it into duodenum", "Gallbladder produces bile and liver stores it", "Neither interacts for digestion", "They jointly secrete insulin"] },
+
+  { q: "Why is the pancreas a mixed gland?", correct: "It has both exocrine (digestive enzymes) and endocrine (insulin/glucagon) functions", options: ["It has both exocrine (digestive enzymes) and endocrine (insulin/glucagon) functions", "It secretes bile like the liver", "It produces only hormones", "It is part of the nervous system"] },
+
+  { q: "Roles of exocrine and endocrine pancreas?", correct: "Exocrine produces digestive enzymes; endocrine secretes insulin and glucagon", options: ["Exocrine produces digestive enzymes; endocrine secretes insulin and glucagon", "Exocrine stores bile; endocrine makes bile", "Exocrine filters blood; endocrine produces urine", "Pancreas only has endocrine function"] },
+
+  { q: "Approximately how many digestive enzymes does the pancreas produce?", correct: "About 22", options: ["About 22", "Only 2", "Over 1000", "None"] },
+
+  { q: "Which enzyme breaks down sugars (carbohydrates)?", correct: "Amylase", options: ["Amylase", "Lipase", "Peptidase", "Nuclease"] },
+
+  { q: "Which enzyme breaks down fats?", correct: "Lipase", options: ["Lipase", "Amylase", "Peptidase", "Lactase"] },
+
+  { q: "Which enzyme breaks down proteins?", correct: "Peptidase (protease)", options: ["Peptidase (protease)", "Amylase", "Lipase", "Nuclease"] },
+
+  { q: "Which enzyme breaks down DNA?", correct: "Nuclease", options: ["Nuclease", "Protease", "Lipase", "Amylase"] },
+
+  { q: "What is the peritoneum and where is it located?", correct: "A serous membrane lining the abdominal cavity and covering digestive organs", options: ["A serous membrane lining the abdominal cavity and covering digestive organs", "A membrane around the lungs", "A lining of the heart", "A layer inside blood vessels"] },
+
+  { q: "What are the two layers of the peritoneum?", correct: "Visceral peritoneum (covers organs) and parietal peritoneum (lines body wall)", options: ["Visceral peritoneum (covers organs) and parietal peritoneum (lines body wall)", "Epicardium and endocardium", "Pleura and mediastinum", "Mucosa and submucosa"] },
+
+  { q: "What is the mesentery and its function?", correct: "A double layer of peritoneum that anchors organs, stores fat, and provides pathways for vessels and nerves", options: ["A double layer of peritoneum that anchors organs, stores fat, and provides pathways for vessels and nerves", "A muscle that moves the intestines", "The lining of the pleural cavity", "The outer layer of the heart"] },
+
+  { q: "What are the six major steps of digestion?", correct: "Ingestion, propulsion, mechanical breakdown, digestion, absorption, defecation", options: ["Ingestion, propulsion, mechanical breakdown, digestion, absorption, defecation", "Inhalation, exhalation, circulation, filtration, secretion, absorption", "Mastication, mastication, mastication, swallowing, sleeping, waking", "Mixing, filtering, pumping, storing, releasing, excreting"] },
+
+  { q: "What happens during ingestion?", correct: "Taking food into the mouth", options: ["Taking food into the mouth", "Absorbing nutrients into blood", "Eliminating waste", "Producing bile"] },
+
+  { q: "What happens during propulsion?", correct: "Movement of food through GI tract by swallowing and peristalsis", options: ["Movement of food through GI tract by swallowing and peristalsis", "Chemical digestion by enzymes in the mouth", "Absorption of water and electrolytes", "Storage of food in gallbladder"] },
+
+  { q: "What happens during mechanical breakdown?", correct: "Physical breakdown by chewing, stomach churning, segmentation", options: ["Physical breakdown by chewing, stomach churning, segmentation", "Chemical alteration of DNA", "Absorption of vitamins only", "Production of white blood cells"] },
+
+  { q: "What happens during digestion?", correct: "Chemical breakdown of food by enzymes into smaller molecules", options: ["Chemical breakdown of food by enzymes into smaller molecules", "Mechanical grinding by teeth only", "Storage of nutrients", "Elimination of urine"] },
+
+  { q: "What happens during absorption?", correct: "Transport of digested nutrients into the blood and lymph", options: ["Transport of digested nutrients into the blood and lymph", "Production of digestive acids", "Respiration", "Blood clotting"] },
+
+  { q: "What happens during defecation?", correct: "Elimination of indigestible substances as feces", options: ["Elimination of indigestible substances as feces", "Secretion of insulin", "Exhalation of CO₂", "Absorption of water in stomach"] },
+
+  { q: "What is peristalsis?", correct: "Wave-like contractions that move food through the GI tract", options: ["Wave-like contractions that move food through the GI tract", "Mixing motions that do not move food forward", "Flow of lymph in vessels", "Movement of air in bronchioles"] },
+
+  { q: "What is segmentation and how does it differ from peristalsis?", correct: "Segmentation mixes food by local constrictions; not primarily for moving it forward", options: ["Segmentation mixes food by local constrictions; not primarily for moving it forward", "Segmentation pushes food quickly to anus", "Peristalsis mixes while segmentation moves food", "Both are identical processes"] },
+
+  { q: "Where does digestion begin?", correct: "In the mouth", options: ["In the mouth", "In the stomach", "In the pancreas", "In the liver"] },
+
+  { q: "What is GERD and basic treatments?", correct: "Gastroesophageal reflux disease; treated with antacids, drugs, or surgery", options: ["Gastroesophageal reflux disease; treated with antacids, drugs, or surgery", "A liver disease cured by insulin", "An infection of appendix treated by antibiotics only", "A pulmonary infection treated with bronchodilators"] },
+
+  { q: "What is cirrhosis and its common causes?", correct: "Progressive liver inflammation and scarring often from alcoholism or hepatitis", options: ["Progressive liver inflammation and scarring often from alcoholism or hepatitis", "Kidney failure due to hypertension", "Inflammation of the appendix", "A heart rhythm disorder"] },
+
+  { q: "What is appendicitis and its symptoms?", correct: "Inflammation of appendix; pain, fever, nausea, loss of appetite", options: ["Inflammation of appendix; pain, fever, nausea, loss of appetite", "Inflammation of liver with jaundice", "A lung condition with wheezing", "A condition causing high blood sugar"] },
+
+  { q: "What happens if the appendix ruptures?", correct: "Bacteria and feces leak into peritoneum causing peritonitis", options: ["Bacteria and feces leak into peritoneum causing peritonitis", "Immediate healing without complications", "Increased bile production", "Release of insulin into bloodstream"] },
+
+  { q: "What are gallstones and how do they affect digestion?", correct: "Crystallized cholesterol in gallbladder; can block ducts and cause pain", options: ["Crystallized cholesterol in gallbladder; can block ducts and cause pain", "Calcium stones in kidney unrelated to digestion", "Viral infection of stomach lining", "Inflammation of lungs"] },
+
+  { q: "How can gallstones be treated?", correct: "Cholecystectomy or medications to dissolve stones", options: ["Cholecystectomy or medications to dissolve stones", "Antibiotics only", "Dialysis", "Bronchodilators"] },
+
+  { q: "What are the major functions of the respiratory system?", correct: "Supply O₂, remove CO₂; also smell, vocalization, pH regulation", options: ["Supply O₂, remove CO₂; also smell, vocalization, pH regulation", "Digest food, absorb nutrients", "Filter blood and produce urine", "Produce hormones and store glycogen"] },
+
+  { q: "What are the main structures of the respiratory system?", correct: "Nose/nasal cavity, paranasal sinuses, pharynx, larynx, trachea, bronchi, lungs, alveoli", options: ["Nose/nasal cavity, paranasal sinuses, pharynx, larynx, trachea, bronchi, lungs, alveoli", "Heart, aorta, vena cava", "Kidney, ureter, bladder", "Liver, gallbladder, pancreas"] },
+
+  { q: "What are the two functional zones of the respiratory system?", correct: "Conducting zone (airways) and respiratory zone (alveoli)", options: ["Conducting zone (airways) and respiratory zone (alveoli)", "Upper and lower GI tract", "Bronchial and vascular zones", "Central and peripheral airway networks"] },
+
+  { q: "What are the upper and lower respiratory tracts composed of?", correct: "Upper: nose/nasal cavity/sinuses/pharynx/larynx; Lower: trachea/bronchi/lungs/alveoli", options: ["Upper: nose/nasal cavity/sinuses/pharynx/larynx; Lower: trachea/bronchi/lungs/alveoli", "Upper: heart and vessels; Lower: kidneys and bladder", "Upper: mouth and teeth; Lower: stomach and intestines", "Upper: pleura; Lower: pericardium"] },
+
+  { q: "What are the functions of each respiratory structure (e.g., nose, sinuses, larynx)?", correct: "Nose filters/warms/moistens; sinuses warm/humidify; pharynx passageway; larynx vocalization and airway protection; trachea filters; bronchi deliver air; lungs gas exchange; alveoli site of gas exchange", options: ["Nose filters/warms/moistens; sinuses warm/humidify; pharynx passageway; larynx vocalization and airway protection; trachea filters; bronchi deliver air; lungs gas exchange; alveoli site of gas exchange", "They all produce digestive enzymes", "They are all part of the circulatory system", "They pump blood through the body"] },
+
+  { q: "What is the larynx made of?", correct: "A framework of nine cartilages connected by membranes and ligaments", options: ["A framework of nine cartilages connected by membranes and ligaments", "Only muscle tissue", "Bony rings like trachea", "Smooth membranous sac"] },
+
+  { q: "What is the epiglottis' role (switch mechanism) in the larynx?", correct: "Routes air to trachea and food to esophagus preventing aspiration", options: ["Routes air to trachea and food to esophagus preventing aspiration", "Secretes mucus into lungs", "Pumps blood to lungs", "Produces bile"] },
+
+  { q: "What is the carina?", correct: "The last tracheal cartilage where trachea branches into primary bronchi; triggers cough reflex", options: ["The last tracheal cartilage where trachea branches into primary bronchi; triggers cough reflex", "A valve in the heart", "Part of the nasal septum", "A lymph node at the base of tongue"] },
+
+  { q: "Which pharynx regions are air-only and which are air/food?", correct: "Nasopharynx: air only; oropharynx & laryngopharynx: air and food", options: ["Nasopharynx: air only; oropharynx & laryngopharynx: air and food", "All are air-only", "All are food-only", "Nasopharynx handles food only"] },
+
+  { q: "How is the bronchial tree organized?", correct: "Trachea → primary bronchi → secondary → tertiary → bronchioles → terminal bronchioles → alveoli", options: ["Trachea → primary bronchi → secondary → tertiary → bronchioles → terminal bronchioles → alveoli", "Alveoli → bronchioles → bronchi → trachea", "Bronchioles directly to nose", "Larynx → alveoli → trachea"] },
+
+  { q: "What are the lungs composed of?", correct: "Branching passages, alveoli, and elastic connective tissue", options: ["Branching passages, alveoli, and elastic connective tissue", "Mostly bone and cartilage", "Dense muscle like heart", "Only fluid and membranes"] },
+
+  { q: "How many lobes does each lung have?", correct: "Right: 3 lobes; Left: 2 lobes and a cardiac notch", options: ["Right: 3 lobes; Left: 2 lobes and a cardiac notch", "Both have 4 lobes", "Right has 2, left has 3", "Each lung has one lobe"] },
+
+  { q: "What are the pleural membranes and purpose?", correct: "Parietal pleura lines thoracic cavity; visceral pleura covers lungs; they reduce friction", options: ["Parietal pleura lines thoracic cavity; visceral pleura covers lungs; they reduce friction", "They line the abdominal cavity", "They secrete bile", "They are part of the heart wall"] },
+
+  { q: "What is the main organ and functional unit of respiration?", correct: "Lungs (organ) and alveoli (functional unit)", options: ["Lungs (organ) and alveoli (functional unit)", "Heart and arteries", "Kidneys and nephrons", "Liver and lobules"] },
+
+  { q: "Types and functions of alveolar cells?", correct: "Type I: gas exchange; Type II: secrete surfactant to reduce surface tension", options: ["Type I: gas exchange; Type II: secrete surfactant to reduce surface tension", "Type I produce mucus; Type II produce enzymes", "Both types are muscle cells", "They produce bile salts"] },
+
+  { q: "What are the four parts of respiration?", correct: "Pulmonary ventilation, external respiration, transport of gases, internal respiration", options: ["Pulmonary ventilation, external respiration, transport of gases, internal respiration", "Ingestion, digestion, absorption, defecation", "Pulmonary circulation only", "Only inhalation and exhalation"] },
+
+  { q: "Two phases of pulmonary ventilation?", correct: "Inspiration and expiration", options: ["Inspiration and expiration", "Diffusion and osmosis", "Vasoconstriction and vasodilation", "Mastication and swallowing"] },
+
+  { q: "Steps of inspiration?", correct: "Diaphragm contracts/flattens; thoracic cavity expands; lung volume increases; pressure decreases; air flows in", options: ["Diaphragm contracts/flattens; thoracic cavity expands; lung volume increases; pressure decreases; air flows in", "Diaphragm relaxes causing inhalation", "Lungs pump air actively like a pump", "Ribs collapse to pull air in"] },
+
+  { q: "Steps of expiration?", correct: "Diaphragm relaxes; thoracic cavity volume decreases; lungs recoil; pressure increases; air flows out", options: ["Diaphragm relaxes; thoracic cavity volume decreases; lungs recoil; pressure increases; air flows out", "Diaphragm contracts to push air out", "Expiration is passive only in the kidneys", "Air is actively pushed out by the heart"] },
+
+  { q: "What are forced inspiration and forced expiration?", correct: "Forced inspiration uses accessory muscles; forced expiration uses abdominal muscles to push air out", options: ["Forced inspiration uses accessory muscles; forced expiration uses abdominal muscles to push air out", "Forced inspiration uses only diaphragm; forced expiration uses lungs only", "They are terms for breathing during sleep", "They refer to vocalization only"] },
+
+  { q: "How do lung volume and pressure change during breathing?", correct: "Inhalation: volume ↑, pressure ↓; Exhalation: volume ↓, pressure ↑", options: ["Inhalation: volume ↑, pressure ↓; Exhalation: volume ↓, pressure ↑", "Both volume and pressure increase during inhalation", "Pressure remains constant during breathing", "Volume decreases during inhalation"] },
+
+  { q: "Role of the diaphragm in respiration?", correct: "Contracts to flatten and expand thoracic cavity during inhalation", options: ["Contracts to flatten and expand thoracic cavity during inhalation", "Secretes surfactant", "Closes the vocal cords", "Pumps blood through lungs"] },
+
+  { q: "Role of intercostal muscles?", correct: "External intercostals raise ribs and expand thoracic cavity during inhalation", options: ["External intercostals raise ribs and expand thoracic cavity during inhalation", "They contract to move food through esophagus", "They line the pleural cavity", "They are muscles of abdominal wall only"] },
+
+  { q: "Key features of major respiratory disorders (e.g., asthma, pneumonia)?", correct: "Bronchitis: inflammation of bronchi; asthma: airway constriction; pneumonia: infection with alveolar fluid; pneumothorax: air in pleural cavity; CF: thick mucus; COPD: obstructive disease group", options: ["Bronchitis: inflammation of bronchi; asthma: airway constriction; pneumonia: infection with alveolar fluid; pneumothorax: air in pleural cavity; CF: thick mucus; COPD: obstructive disease group", "All are heart diseases", "They all cause kidney failure", "They are types of digestive disorders"] },
+
+  { q: "Main function of the muscular system?", correct: "To produce movement", options: ["To produce movement", "To produce hormones", "To digest food", "To filter blood"] },
+
+  { q: "How does muscular system work with bones and joints to produce movement?", correct: "Bones act as levers, joints as fulcrums, muscle contraction provides effort", options: ["Bones act as levers, joints as fulcrums, muscle contraction provides effort", "Muscles create marrow inside bones", "Joints produce electricity", "Bones contract like muscles to move"] },
+
+  { q: "In the lever system, what do bones act as?", correct: "Levers", options: ["Levers", "Fulcrums", "Effort", "Load only"] },
+
+  { q: "In the lever system, what do joints act as?", correct: "Fulcrums", options: ["Fulcrums", "Levers", "Muscles", "Weights"] },
+
+  { q: "In the lever system, what does muscle contraction supply?", correct: "Effort (force)", options: ["Effort (force)", "Fulcrum", "Load weight", "Leverage only"] },
+
+  { q: "Benefit of lever systems in muscles?", correct: "Allows moving heavier loads or moving loads farther/faster with less effort", options: ["Allows moving heavier loads or moving loads farther/faster with less effort", "Reduces need for nervous control", "Prevents any movement", "Creates new bones"] },
+
+  { q: "Definition of muscle insertion?", correct: "The more movable attachment point of a muscle", options: ["The more movable attachment point of a muscle", "The less movable origin", "The muscle belly only", "The nerve supply to a muscle"] },
+
+  { q: "Definition of muscle origin?", correct: "The less movable or fixed attachment point of a muscle", options: ["The less movable or fixed attachment point of a muscle", "The insertion", "A muscle action", "The tendon only"] },
+
+  { q: "Definition of muscle action?", correct: "The movement the muscle performs when it contracts", options: ["The movement the muscle performs when it contracts", "The anatomical origin", "A bone name", "A nerve"] },
+
+  { q: "What two aspects are influenced by arrangement of muscle fascicles?", correct: "Amount of movement (range) and amount of force (power)", options: ["Amount of movement (range) and amount of force (power)", "Only color and size", "Only blood supply", "Only bone shape"] },
+
+  { q: "Main factor determining muscle power?", correct: "Total number of muscle fibers", options: ["Total number of muscle fibers", "Length of the tendon", "Amount of bone", "Skin thickness"] },
+
+  { q: "Four main types of skeletal muscle fiber patterns?", correct: "Circular, convergent, parallel, pennate", options: ["Circular, convergent, parallel, pennate", "Longitudinal, transverse, oblique, spiral", "Random, grid, ring, web", "Cardiac, smooth, skeletal, mixed"] },
+
+  { q: "Which pattern surrounds external openings forming sphincters?", correct: "Circular", options: ["Circular", "Parallel", "Convergent", "Pennate"] },
+
+  { q: "Which fiber patterns are most powerful (greatest number of fibers)?", correct: "Bipennate and multipennate", options: ["Bipennate and multipennate", "Circular and parallel", "Convergent and unipennate", "Long and short"] },
+
+  { q: "Why can't muscles reverse movements themselves?", correct: "Muscles can only pull (contract) and need opposing muscles", options: ["Muscles can only pull (contract) and need opposing muscles", "They can push but not pull", "They are fixed to bones", "They are rigid structures"] },
+
+  { q: "Three main functional muscle types based on roles?", correct: "Agonist, antagonist, synergist", options: ["Agonist, antagonist, synergist", "Prime, minor, major", "Flexor, extensor, adductor only", "Motor, sensory, interneuron"] },
+
+  { q: "Function of agonist muscle?", correct: "Prime mover producing specific movement", options: ["Prime mover producing specific movement", "Opposes the agonist", "Stabilizes but does not produce movement", "Produces nerve impulses"] },
+
+  { q: "Function of antagonist muscle?", correct: "Opposes or reverses action of agonist", options: ["Opposes or reverses action of agonist", "Enhances agonist action", "Provides blood to the agonist", "Forms joints"] },
+
+  { q: "Function of synergist muscle?", correct: "Assists prime mover (adds force, stabilizes, prevents unwanted motions)", options: ["Assists prime mover (adds force, stabilizes, prevents unwanted motions)", "Replaces agonist permanently", "Inhibits movement", "Creates new bones"] },
+
+  { q: "Why is it important to develop agonist and antagonist muscles evenly?", correct: "To maintain joint stability, flexibility, and prevent imbalances", options: ["To maintain joint stability, flexibility, and prevent imbalances", "To stop muscle growth", "To increase bone fragility", "To produce more fat"] },
+
+  { q: "Main criteria used to name skeletal muscles?", correct: "Location, shape, size, fiber direction, attachments, number of origins, action", options: ["Location, shape, size, fiber direction, attachments, number of origins, action", "Color and smell", "Blood supply only", "Direction of blood flow"] },
+
+  { q: "How does location influence muscle name?", correct: "Named for the region where found (e.g., intercostal between ribs)", options: ["Named for the region where found (e.g., intercostal between ribs)", "Named only for size", "Named randomly", "Named for blood supply"] },
+
+  { q: "How does muscle shape influence its name?", correct: "Shape reflected in name (e.g., deltoid = triangular)", options: ["Shape reflected in name (e.g., deltoid = triangular)", "Color determines name", "Shape never considered", "Only origin and insertion matter"] },
+
+  { q: "How does relative size influence muscle name?", correct: "Terms like maximus/minimus/longus/brevis describe size", options: ["Terms like maximus/minimus/longus/brevis describe size", "Size doesn't matter", "Only number of origins matters", "Size ties to blood type"] },
+
+  { q: "How does fiber direction influence muscle name?", correct: "Named for fiber direction (e.g., oblique)", options: ["Named for fiber direction (e.g., oblique)", "Named for blood vessels", "Named for bones only", "Named for skin texture"] },
+
+  { q: "How can attachments be used to name muscles?", correct: "Name may include bones of origin/insertion (e.g., brachioradialis)", options: ["Name may include bones of origin/insertion (e.g., brachioradialis)", "Name may include hair color", "Attach only defines size", "Attachments don't affect names"] },
+
+  { q: "How does number of origins affect muscle name?", correct: "Prefixes bi-/tri-/quad- indicate number of origins", options: ["Prefixes bi-/tri-/quad- indicate number of origins", "Number of origins doesn't matter", "Only 'uni' is used", "Origins are irrelevant to name"] },
+
+  { q: "How can action be used to name a muscle?", correct: "Named by movement produced (e.g., extensor digitorum extends fingers)", options: ["Named by movement produced (e.g., extensor digitorum extends fingers)", "Named by color", "Named by smell", "Named by blood type"] },
+
+  { q: "How are muscles functionally organized?", correct: "Grouped into compartments by fascia based on function and innervation", options: ["Grouped into compartments by fascia based on function and innervation", "Scattered randomly without organization", "Grouped by blood supply only", "Organized by hair follicles"] },
+
+  { q: "General action of anterior arm compartment?", correct: "Flexion of shoulder and elbow", options: ["Flexion of shoulder and elbow", "Extension of wrist and digits", "Plantarflexion of ankle", "Adduction of thigh"] },
+
+  { q: "General action of posterior forearm compartment?", correct: "Extension of the wrist and digits", options: ["Extension of the wrist and digits", "Flexion of elbow and shoulder", "Flexion of toes", "Inversion of foot"] },
+
+  { q: "General action of anterior thigh compartment?", correct: "Flexion at hip and extension at knee", options: ["Flexion at hip and extension at knee", "Plantarflexion and eversion", "Flexion of wrist", "Extension of digits only"] },
+
+  { q: "General action of posterior leg compartment?", correct: "Plantarflexion and eversion of ankle and flexion of toes", options: ["Plantarflexion and eversion of ankle and flexion of toes", "Extension of elbow", "Flexion of fingers", "Dorsiflexion only"] },
+
+  { q: "What is a strain and its cause?", correct: "Muscle/tendon tear caused by trauma, overuse, or sudden movement", options: ["Muscle/tendon tear caused by trauma, overuse, or sudden movement", "A bone fracture", "A viral infection", "A blood clot in veins"] },
+
+  { q: "Common symptoms of a muscle strain?", correct: "Swelling, bruising, pain, weakness", options: ["Swelling, bruising, pain, weakness", "Jaundice and itching", "High fever only", "Loss of vision"] },
+
+  { q: "Common treatments for a muscle strain?", correct: "RICE, protection, meds, PT; surgery if severe", options: ["RICE, protection, meds, PT; surgery if severe", "Antibiotics only", "Dialysis", "Chemotherapy"] },
+
+  { q: "What is torticollis and effect on neck positioning?", correct: "Neck rotated/tilted to one side due to muscle shortening/spasm", options: ["Neck rotated/tilted to one side due to muscle shortening/spasm", "Inflammation of lungs causing cough", "Abdominal hernia", "Deformity of hip joint"] },
+
+  { q: "Common causes of congenital torticollis?", correct: "Limited womb space causing abnormal muscle development or shortening", options: ["Limited womb space causing abnormal muscle development or shortening", "Viral infection after birth", "Excessive exercise", "Poor diet alone"] },
+
+  { q: "Effects of torticollis on function or appearance?", correct: "Restricted mobility, discomfort, possible facial asymmetry in congenital cases", options: ["Restricted mobility, discomfort, possible facial asymmetry in congenital cases", "Improved breathing", "Increased height", "Better vision"] },
+
+  { q: "How does cardiovascular system support muscular system?", correct: "Delivers oxygen and nutrients and removes CO₂ and waste", options: ["Delivers oxygen and nutrients and removes CO₂ and waste", "Builds muscle fibers directly", "Stores calcium for muscles", "Generates electrical impulses"] },
+
+  { q: "How does muscular system assist cardiovascular system?", correct: "Muscle contractions help venous return to the heart", options: ["Muscle contractions help venous return to the heart", "Muscles secrete blood", "Muscles create red blood cells", "Muscles pump air into lungs"] },
+
+  { q: "How do cardiovascular and respiratory systems work together for gas exchange?", correct: "Cardiovascular transports gases; respiratory exchanges them at the lungs", options: ["Cardiovascular transports gases; respiratory exchanges them at the lungs", "Both systems digest food", "They produce hormones together", "They form lymph nodes"] },
+
+  { q: "Connection between digestive and cardiovascular systems?", correct: "Digestive breaks down food into nutrients that get absorbed into bloodstream; cardiovascular transports nutrients", options: ["Digestive breaks down food into nutrients that get absorbed into bloodstream; cardiovascular transports nutrients", "Digestive pumps blood", "Cardiovascular digests proteins", "Both systems regulate smell"] },
+
+  { q: "How does cardiovascular system support digestive organs?", correct: "Provides oxygen and nutrients via blood to ensure proper function", options: ["Provides oxygen and nutrients via blood to ensure proper function", "Directly digests food", "Stores bile", "Sends nerve signals only"] },
+
+  { q: "Function of lymphatic system in relation to cardiovascular system?", correct: "Collects and returns leaked fluids and proteins to bloodstream maintaining blood volume", options: ["Collects and returns leaked fluids and proteins to bloodstream maintaining blood volume", "Produces red blood cells", "Pumps arterial blood", "Secretes digestive enzymes"] },
+
+  { q: "How does immune system interact with cardiovascular system?", correct: "Defends cardiovascular organs and uses bloodstream to transport immune cells and antibodies", options: ["Defends cardiovascular organs and uses bloodstream to transport immune cells and antibodies", "Creates blood clots only", "Converts cholesterol into hormones", "Filters air in lungs"] },
+
+  { q: "Overall importance of system interactions in the human body?", correct: "Ensure oxygen, nutrients, and wastes are efficiently managed to maintain homeostasis", options: ["Ensure oxygen, nutrients, and wastes are efficiently managed to maintain homeostasis", "Keep systems completely independent", "Replace organs with synthetic parts", "Make the body immune to gravity"] }
+];
+
+/* Finalize: connect `questions` to the core logic */
+startQuiz(); // uses the `questions` array provided above
+
+// Accessibility: allow number keys 1–4 to choose options
+document.addEventListener('keydown', (e) => {
+  if (document.activeElement && document.activeElement.tagName === 'INPUT') return; // ignore if typing
+  if (!['1','2','3','4'].includes(e.key)) return;
+  const visibleOptions = Array.from(document.querySelectorAll('.option'));
+  const idx = parseInt(e.key, 10) - 1;
+  if (visibleOptions[idx]) visibleOptions[idx].click();
+});
+</script>
