@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BIOL3184 — Exam 4 Study Guide</title>
+  <style>
+    :root{--accent:#0b6efd;--bg:#0f1720;--card:#0b1220;--muted:#9aa6b2;--glass:rgba(255,255,255,0.03)}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,'Helvetica Neue',Arial;color:#e6eef6;background:linear-gradient(180deg,#071026 0%, #071729 60%);}
+    .app{max-width:1100px;margin:28px auto;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+    header h1{margin:0;font-size:20px}
+    header p{margin:0;color:var(--muted);font-size:13px}
+
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+    .search{flex:1;min-width:220px}
+    input[type=search]{width:100%;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--card);color:inherit}
+    .btn{padding:10px 12px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04)}
+
+    nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+    nav button{background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+    h2{margin-top:0}
+    .section-intro{color:var(--muted);font-size:14px;margin-bottom:12px}
+    details{background:rgba(255,255,255,0.01);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.01)}
+    summary{font-weight:600;cursor:pointer}
+    ul{margin:8px 0 12px 18px}
+    li{margin:6px 0}
+    .two-column{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+    footer{color:var(--muted);font-size:13px;margin-top:18px}
+    .tag{display:inline-block;background:rgba(255,255,255,0.02);padding:6px 8px;border-radius:8px;margin-right:6px;margin-bottom:6px;color:var(--muted)}
+
+    @media(max-width:800px){.two-column{grid-template-columns:1fr}}
+    .highlight{background:linear-gradient(90deg,rgba(11,110,253,0.12),rgba(11,110,253,0.03));padding:8px;border-radius:6px}
+    .search-hit{background:rgba(11,110,253,0.08);padding:2px 4px;border-radius:3px}
+    .copy-btn{float:right;background:transparent;border:0;color:var(--muted);cursor:pointer}
+    .disorders{display:flex;flex-wrap:wrap;gap:8px}
+    .print-only{display:none}
+    @media print{.controls,nav,header,footer{display:none}.print-only{display:block}}
+  </style>
+</head>
+<body>
+  <div class="app" role="main">
+    <header>
+      <div>
+        <h1>BIOL3184 — Exam 4 Study Guide</h1>
+        <p>All content transcribed from your uploaded PowerPoint (Review Exam 4).</p>
+      </div>
+    </header>
+
+    <div class="controls">
+      <div class="search">
+        <input id="q" type="search" placeholder="Search the study guide (e.g., 'nephron', 'ADH', 'cerebellum')">
+      </div>
+      <button class="btn" id="clear">Clear</button>
+      <button class="btn ghost" id="expandAll">Expand All</button>
+      <button class="btn ghost" id="collapseAll">Collapse All</button>
+      <button class="btn" id="print">Print / Save PDF</button>
+    </div>
+
+    <nav aria-label="Quick jump">
+      <button data-jump="urinary">Urinary System</button>
+      <button data-jump="nephron">Nephron</button>
+      <button data-jump="hormones">Hormones (ADH / Aldosterone)</button>
+      <button data-jump="nervous">Nervous System</button>
+      <button data-jump="brain">Brain & Brainstem</button>
+      <button data-jump="spinal">Spinal Cord</button>
+      <button data-jump="pns">PNS & Receptors</button>
+      <button data-jump="ans">Autonomic NS</button>
+      <button data-jump="endocrine">Endocrine</button>
+      <button data-jump="disorders">Disorders (Word bank)</button>
+    </nav>
+
+    <div class="grid">
+
+      <!-- URINARY -->
+      <section id="urinary" class="card">
+        <h2>Urinary System — Overview</h2>
+        <p class="section-intro">Main functions, waste products, and pathway from production to removal.</p>
+        <details open>
+          <summary>Main functions & wastes</summary>
+          <ul>
+            <li>Functions: blood filtration, reabsorption, elimination, regulation of BP/water levels, acid/base balance.</li>
+            <li>Main nitrogenous wastes: <strong>urea</strong>, <strong>uric acid</strong>, <strong>creatinine</strong>.</li>
+            <li>Urine pathway (in order): <em>Kidney → Ureter → Bladder → Urethra</em>.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Kidney — structure & locations</summary>
+          <ul>
+            <li>Location: retroperitoneal cavity (approx. T11/12 to L3).</li>
+            <li>Regions: renal cortex, renal medulla, renal pelvis.</li>
+            <li>Renal pyramids are located in the <em>renal medulla</em>.</li>
+            <li>Hilum — entry/port for nerves, blood vessels, and ureter.</li>
+            <li>Protected by tough fibrous capsule.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Ureter, Bladder, Urethra</summary>
+          <div class="two-column">
+            <div>
+              <h3>Ureter</h3>
+              <ul>
+                <li>Tubes connecting kidney to bladder; transport urine via peristalsis + gravity.</li>
+                <li>Composed of transitional epithelium, connective tissue, and smooth muscle.</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Bladder & Urethra</h3>
+              <ul>
+                <li>Bladder: temporary storage; when empty sits in pelvis; when full expands superiorly.</li>
+                <li>Bladder lining: transitional epithelium + smooth muscle.</li>
+                <li>Urethra: tube out of body. Internal sphincter = smooth muscle (involuntary). External sphincter = skeletal muscle (voluntary).</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <!-- NEPHRON -->
+      <section id="nephron" class="card">
+        <h2>Nephron (Functional Unit)</h2>
+        <p class="section-intro">Structures, processes, and roles of each segment.</p>
+
+        <details open>
+          <summary>Nephron components (in order)</summary>
+          <ol>
+            <li>Glomerulus</li>
+            <li>Bowman&apos;s capsule</li>
+            <li>Proximal Convoluted Tubule (PCT)</li>
+            <li>Loop of Henle (descending & ascending)</li>
+            <li>Distal Convoluted Tubule (DCT)</li>
+            <li>Collecting duct</li>
+          </ol>
+        </details>
+
+        <details>
+          <summary>Renal processes & highlights</summary>
+          <ul>
+            <li>3 main renal processes: <strong>filtration</strong>, <strong>reabsorption</strong>, <strong>secretion</strong>.</li>
+            <li><strong>Glomerulus:</strong> group of leaky capillaries for filtration.</li>
+            <li><strong>Bowman&apos;s capsule:</strong> collects filtrate.</li>
+            <li><strong>PCT:</strong> ~65% of reabsorption; ~50% of urea transported out into renal tissue.</li>
+            <li><strong>Loop of Henle:</strong> countercurrent system for concentrating urine (water & salt reabsorption).</li>
+            <li><strong>DCT:</strong> ~15% salts reabsorbed; site of <em>aldosterone</em> action.</li>
+            <li><strong>Collecting duct:</strong> last control of urine concentration; site of <em>ADH</em> action.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Hormones that affect nephron</summary>
+          <ul>
+            <li><strong>Aldosterone</strong> (from adrenal cortex): increases Na<sup>+</sup> reabsorption → water retention → ↑ blood volume.</li>
+            <li><strong>ADH</strong> (from posterior pituitary): signals collecting ducts to reabsorb water → concentrated urine.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Water balance & urine color</summary>
+          <ul>
+            <li>Dehydration: decreased urine output; concentrated urine; hormonal responses triggered.</li>
+            <li>Overhydration: increased urine output; very pale urine.</li>
+            <li>Where Na<sup>+</sup> goes, water follows — key concept for volume regulation.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Acid-base balance</summary>
+          <ul>
+            <li>Normal blood pH: <strong>7.35–7.45</strong>.</li>
+            <li>Acidosis: pH &lt; 7.35 — kidney excretes H<sup>+</sup> and reabsorbs HCO<sub>3</sub><sup>-</sup>. Deadly below ~6.8.</li>
+            <li>Alkalosis: pH &gt; 7.45 — kidney excretes HCO<sub>3</sub><sup>-</sup> and reabsorbs H<sup>+</sup>. Deadly above ~8.0.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Micturition (voiding)</summary>
+          <ul>
+            <li>Micturition = act of emptying bladder.</li>
+            <li>Neural control: autonomic + somatic pathways; stretch receptors activate micturition center.</li>
+            <li>External sphincter allows voluntary delay of voiding.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Common urinary disorders (word bank)</summary>
+          <div class="disorders">
+            <span class="tag">Renal calculi</span>
+            <span class="tag">UTI</span>
+            <span class="tag">Incontinence</span>
+            <span class="tag">Anuria</span>
+            <span class="tag">Polyuria</span>
+            <span class="tag">Dysuria</span>
+          </div>
+        </details>
+      </section>
+
+      <!-- NERVOUS SYSTEM -->
+      <section id="nervous" class="card">
+        <h2>Nervous System — Overview</h2>
+        <details open>
+          <summary>Definition & processes</summary>
+          <ul>
+            <li>Master control & communication system; responsible for memory, learning, intelligence, emotions.</li>
+            <li>Communicates using electrical signals — rapid and specific responses.</li>
+            <li>3 essential processes: sensory input, integration, motor output.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Divisions & tissues</summary>
+          <ul>
+            <li>CNS = brain + spinal cord (integration & command).</li>
+            <li>PNS = nerves + ganglia outside CNS (communication lines).</li>
+            <li>Tissues: neurons (excitable) & neuroglia (supportive).</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Neuron structure & function</summary>
+          <ul>
+            <li>Neurons: excitable, do not divide, long-lived, high metabolic rate.</li>
+            <li>Parts: cell body (contains nucleus), dendrites (receive), axon (conducts away), myelin sheath (speeds conduction), nodes of Ranvier (saltatory conduction), axon hillock (trigger zone), synapse (communication site).</li>
+            <li>Myelin increases conduction speed by ~200x.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Neuron classification</summary>
+          <ul>
+            <li>Classified by direction of impulse, location of cell body, and effector type.</li>
+            <li>Types: sensory (afferent), motor (efferent), interneuron, autonomic.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Neuroglia (glial cells)</summary>
+          <ul>
+            <li>Astrocytes: most abundant in CNS, form blood-brain barrier, regulate neurotransmitters and blood flow.</li>
+            <li>Oligodendrocytes: make myelin sheaths in CNS.</li>
+            <li>Schwann cells: make myelin in PNS.</li>
+            <li>Microglia: phagocytic immune cells in CNS.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>White vs gray matter</summary>
+          <ul>
+            <li>Gray matter = neuron cell bodies & unmyelinated axons.</li>
+            <li>White matter = myelinated axons; contains no cell bodies.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Reflexes & interneurons</summary>
+          <ul>
+            <li>Interneurons in CNS relay sensory signals to motor neurons in reflex pathways (bypass brain for fast response).</li>
+            <li>Autonomic neurons have 2-neuron chains: preganglionic & postganglionic.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Disorders (examples)</summary>
+          <div class="disorders">
+            <span class="tag">Multiple sclerosis</span>
+            <span class="tag">Peripheral neuropathy</span>
+            <span class="tag">Polio</span>
+          </div>
+        </details>
+      </section>
+
+      <!-- BRAIN -->
+      <section id="brain" class="card">
+        <h2>Brain — Major Structures & Functions</h2>
+        <details open>
+          <summary>Main areas</summary>
+          <ul>
+            <li>Cerebrum, diencephalon, brainstem, cerebellum.</li>
+            <li>Cerebral cortex = outer layer (gray matter) with sensory, motor, association areas.</li>
+            <li>5 lobes: frontal, parietal, temporal, occipital, insula.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Diencephalon</summary>
+          <ul>
+            <li>Thalamus: relay & integration center; sorts information to/from cerebrum.</li>
+            <li>Hypothalamus: link between nervous & endocrine systems; homeostatic control (hunger, thirst, temp, ANS control).</li>
+            <li>Pineal gland: secretes melatonin.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Brainstem & cerebellum</summary>
+          <ul>
+            <li>Brainstem parts: midbrain (visual/auditory reflexes, posture), pons (respiratory center), medulla oblongata (cardiac & respiratory centers, decussation site).</li>
+            <li>Cerebellum: coordinates movement, maintains equilibrium and posture, motor memory, predictive sequencing.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Meninges, ventricles, and CSF</summary>
+          <ul>
+            <li>Meninges: dura mater, arachnoid mater, pia mater.</li>
+            <li>Ventricles: 4 connected cavities (lateral, 3rd, cerebral aqueduct, 4th) that contain CSF.</li>
+            <li>CSF: produced by choroid plexus; protects and nourishes neural tissue and reduces brain weight.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Language, sensory, and motor regions</summary>
+          <ul>
+            <li>Wernicke's area: language comprehension.</li>
+            <li>Broca's area: speech production.</li>
+            <li>Temporal lobe: hearing; occipital: vision; frontal: smell (olfaction) often associated).</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Common brain disorders (examples)</summary>
+          <div class="disorders">
+            <span class="tag">Meningitis</span>
+            <span class="tag">Hydrocephalus</span>
+            <span class="tag">Parkinson's disease</span>
+            <span class="tag">Spinal cord injury</span>
+          </div>
+        </details>
+      </section>
+
+      <!-- SPINAL CORD -->
+      <section id="spinal" class="card">
+        <h2>Spinal Cord</h2>
+        <details open>
+          <summary>Location & structure</summary>
+          <ul>
+            <li>Extends from foramen magnum through vertebral canal; ends at L1/L2 (conus medullaris).</li>
+            <li>Filum terminale = extension from conus to coccyx (anchoring).</li>
+            <li>31 pairs of spinal nerves exit the cord.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Tracts & protection</summary>
+          <ul>
+            <li>Ascending tracts carry sensory info; descending tracts carry motor info.</li>
+            <li>Protected by vertebrae, meninges, and CSF.</li>
+            <li>Main functions: sensory/motor innervation, conduction pathway, reflex center.</li>
+          </ul>
+        </details>
+      </section>
+
+      <!-- PNS -->
+      <section id="pns" class="card">
+        <h2>PNS, Receptors, Cranial & Spinal Nerves</h2>
+        <details open>
+          <summary>Functional divisions</summary>
+          <ul>
+            <li>PNS = communication link to CNS. Functionally split into sensory and motor divisions.</li>
+            <li>Sensory division: somatic sensory (skin, limbs, special senses) and visceral sensory (internal organs).</li>
+            <li>Motor division: somatic (voluntary skeletal muscle) and autonomic (involuntary: smooth, cardiac, glands).</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Sensory receptors & classification</summary>
+          <ul>
+            <li>By location: exteroceptors, interoceptors, proprioceptors.</li>
+            <li>By function: mechanoreceptors, thermoreceptors, chemoreceptors, photoreceptors, nociceptors.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Cranial & spinal nerves</summary>
+          <ul>
+            <li>12 cranial nerves (primarily arise from brainstem/medulla); serve head & neck.</li>
+            <li>31 spinal nerve pairs. Dorsal root = sensory; ventral root = motor; both join at intervertebral foramen.</li>
+            <li>Spinal nerve components: dorsal/ventral roots, spinal nerve, rami, plexus.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Nerve plexuses</summary>
+          <ul>
+            <li>Cervical: anterior neck, head, upper shoulders.</li>
+            <li>Brachial: upper limb.</li>
+            <li>Lumbar: anterior/medial thigh, some cutaneous leg areas.</li>
+            <li>Sacral: posterior thigh, leg, foot.</li>
+          </ul>
+        </details>
+      </section>
+
+      <!-- ANS -->
+      <section id="ans" class="card">
+        <h2>Autonomic Nervous System (ANS)</h2>
+        <details open>
+          <summary>Basic roles</summary>
+          <ul>
+            <li>Part of motor division: controls involuntary effectors (smooth muscle, cardiac muscle, glands).</li>
+            <li>Helps maintain internal environment and homeostasis.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Sympathetic vs Parasympathetic</summary>
+          <div class="two-column">
+            <div>
+              <h3>Sympathetic (SNS)</h3>
+              <ul>
+                <li>"Fight or flight" — prepares body for stress/emergencies.</li>
+                <li>Origin: thoracolumbar region.</li>
+                <li>Short preganglionic, long postganglionic fibers.</li>
+                <li>Widespread effects.</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Parasympathetic (PSNS)</h3>
+              <ul>
+                <li>"Rest and relax" — maintenance functions.</li>
+                <li>Origin: craniosacral region.</li>
+                <li>Long preganglionic, short postganglionic fibers.</li>
+                <li>Localized effects.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <!-- ENDOCRINE -->
+      <section id="endocrine" class="card">
+        <h2>Endocrine System</h2>
+        <details open>
+          <summary>Core concepts</summary>
+          <ul>
+            <li>Ductless glands secrete hormones into blood; hormones act on target cells with receptors.</li>
+            <li>Slow-acting with widespread effects; regulates growth, reproduction, blood chemistry, stress, metabolism.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Stimuli types & feedback</summary>
+          <ul>
+            <li>Humoral: changes in ions/nutrients trigger release.</li>
+            <li>Neural: neural input triggers endocrine release.</li>
+            <li>Hormonal: one hormone triggers another.</li>
+            <li>Negative feedback: common regulation (e.g., Ca<sup>2+</sup> & PTH).</li>
+            <li>Positive feedback: amplifying response (e.g., oxytocin during labor).</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Antagonistic hormone pairs</summary>
+          <ul>
+            <li>Insulin vs glucagon</li>
+            <li>Parathyroid hormone (PTH) vs calcitonin</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Endocrine disorders (examples)</summary>
+          <div class="disorders">
+            <span class="tag">Diabetes Mellitus Type I</span>
+            <span class="tag">Diabetes Mellitus Type II</span>
+            <span class="tag">Cushing's disease</span>
+            <span class="tag">Addison's disease</span>
+            <span class="tag">Grave's disease</span>
+            <span class="tag">Hypothyroidism</span>
+            <span class="tag">Gigantism</span>
+            <span class="tag">Acromegaly</span>
+          </div>
+        </details>
+      </section>
+
+      <!-- DISORDERS/WORD BANK -->
+      <section id="disorders" class="card">
+        <h2>Disorders / Word Bank (Study matches)</h2>
+        <p class="section-intro">Match definitions, symptoms, causes, and treatments during review.</p>
+        <details open>
+          <summary>Urinary & Renal</summary>
+          <ul>
+            <li><strong>Renal calculi:</strong> kidney stones — pain, hematuria; treated with hydration, analgesics, lithotripsy/surgery if needed.</li>
+            <li><strong>UTI:</strong> dysuria, frequency, urgency; antibiotics are common treatment.</li>
+            <li><strong>Incontinence:</strong> inability to control urination; multiple types and treatments.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Nervous system disorders</summary>
+          <ul>
+            <li><strong>Multiple sclerosis:</strong> autoimmune demyelination in CNS — weakness, sensory changes; variable treatment.</li>
+            <li><strong>Polio:</strong> viral infection affecting motor neurons; paralysis in severe cases.</li>
+            <li><strong>Peripheral neuropathy:</strong> damage to peripheral nerves — numbness, tingling, pain; numerous causes (diabetes, toxins).</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Brain / spinal disorders</summary>
+          <ul>
+            <li><strong>Meningitis:</strong> infection/inflammation of meninges — fever, neck stiffness, altered mental status.</li>
+            <li><strong>Hydrocephalus:</strong> excess CSF — enlarged ventricles, raised intracranial pressure.</li>
+            <li><strong>Parkinson's disease:</strong> degenerative disorder affecting movement (bradykinesia, tremor, rigidity).</li>
+            <li><strong>Spinal cord injury:</strong> depends on level/extent — sensory/motor deficits below lesion.</li>
+          </ul>
+        </details>
+      </section>
+
+    </div>
+
+    <footer>
+      <div>Tip: Use the search box to highlight terms. Click <em>Expand All</em> to see everything at once or print from the browser to create a PDF.</div>
+    </footer>
+  </div>
+
+  <script>
+    // Simple search & highlight
+    const q = document.getElementById('q');
+    const clear = document.getElementById('clear');
+    const expandAll = document.getElementById('expandAll');
+    const collapseAll = document.getElementById('collapseAll');
+    const printBtn = document.getElementById('print');
+
+    function escapeHtml(text){return text.replace(/[&<>\"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+
+    function search(term){
+      // remove old highlights
+      document.querySelectorAll('.search-hit').forEach(n=>{
+        const parent = n.parentNode;
+        parent.replaceChild(document.createTextNode(n.textContent), n);
+      });
+      if(!term) return;
+      const re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'ig');
+      const walker = document.createTreeWalker(document.querySelector('.app'), NodeFilter.SHOW_TEXT, null);
+      while(walker.nextNode()){
+        const node = walker.currentNode;
+        if(node.parentNode && ['SCRIPT','STYLE'].includes(node.parentNode.tagName)) continue;
+        const m = node.nodeValue.match(re);
+        if(m){
+          const span = document.createElement('span');
+          span.className='search-hit';
+          const frag = document.createDocumentFragment();
+          let lastIndex = 0; let text = node.nodeValue;
+          text.replace(re, (match, idx)=>{
+            if(idx>lastIndex) frag.appendChild(document.createTextNode(text.slice(lastIndex, idx)));
+            const s = document.createElement('span'); s.className='search-hit'; s.textContent = match; frag.appendChild(s);
+            lastIndex = idx + match.length;
+          });
+          if(lastIndex < text.length) frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+          node.parentNode.replaceChild(frag, node);
+        }
+      }
+    }
+
+    q.addEventListener('input', e=>{search(e.target.value.trim())});
+    clear.addEventListener('click', ()=>{q.value='';search('');q.focus();});
+
+    expandAll.addEventListener('click', ()=>{document.querySelectorAll('details').forEach(d=>d.open=true)});
+    collapseAll.addEventListener('click', ()=>{document.querySelectorAll('details').forEach(d=>d.open=false)});
+
+    document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click', ()=>{
+      const id = b.getAttribute('data-jump');
+      const el = document.getElementById(id);
+      if(el){el.scrollIntoView({behavior:'smooth',block:'start'}); el.querySelector('details')?.setAttribute('open','');}
+    }));
+
+    printBtn.addEventListener('click', ()=>window.print());
+
+    // keyboard: Ctrl+F focuses search
+    window.addEventListener('keydown', e=>{
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='f'){ e.preventDefault(); q.focus(); q.select(); }
+    });
+  </script>
+</body>
+</html>
