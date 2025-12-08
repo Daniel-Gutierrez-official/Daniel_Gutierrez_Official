@@ -5,42 +5,46 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>BIOL3184 — Exam 4 Study Guide</title>
   <style>
-    :root{--accent:#0b6efd;--bg:#0f1720;--card:#0b1220;--muted:#9aa6b2;--glass:rgba(255,255,255,0.03)}
-    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,'Helvetica Neue',Arial;color:#e6eef6;background:linear-gradient(180deg,#071026 0%, #071729 60%);}
-    .app{max-width:1100px;margin:28px auto;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    :root{--accent:#0b6efd;--bg:#ffffff;--card:#f5f7fb;--muted:#4b5563;--glass:rgba(0,0,0,0.05)}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,'Helvetica Neue',Arial;color:#111;background:#f0f2f5;}
+    .app{max-width:1100px;margin:28px auto;padding:28px;background:white;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
     header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
-    header h1{margin:0;font-size:20px}
-    header p{margin:0;color:var(--muted);font-size:13px}
+    header h1{margin:0;font-size:22px;color:#111}
+    header p{margin:0;color:var(--muted);font-size:14px}
 
     .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
     .search{flex:1;min-width:220px}
-    input[type=search]{width:100%;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--card);color:inherit}
+    input[type=search]{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #d1d5db;background:white;color:inherit}
     .btn{padding:10px 12px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04)}
+    .btn.ghost{background:white;border:1px solid #d1d5db;color:#111}
 
     nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
-    nav button{background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
+    nav button{background:#e5e7eb;border:1px solid #d1d5db;color:#374151;padding:8px 10px;border-radius:8px;cursor:pointer}
 
     .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
-    h2{margin-top:0}
+    .card{background:#ffffff;padding:18px;border-radius:10px;border:1px solid #e5e7eb}
+    h2{margin-top:0;color:#111}
     .section-intro{color:var(--muted);font-size:14px;margin-bottom:12px}
-    details{background:rgba(255,255,255,0.01);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.01)}
-    summary{font-weight:600;cursor:pointer}
+    details{background:#f9fafb;padding:12px;border-radius:8px;border:1px solid #e5e7eb}
+    summary{font-weight:600;cursor:pointer;color:#111}
     ul{margin:8px 0 12px 18px}
     li{margin:6px 0}
     .two-column{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
     footer{color:var(--muted);font-size:13px;margin-top:18px}
-    .tag{display:inline-block;background:rgba(255,255,255,0.02);padding:6px 8px;border-radius:8px;margin-right:6px;margin-bottom:6px;color:var(--muted)}
+    .tag{display:inline-block;background:#f3f4f6;padding:6px 8px;border-radius:8px;margin-right:6px;margin-bottom:6px;color:#374151}
 
     @media(max-width:800px){.two-column{grid-template-columns:1fr}}
-    .highlight{background:linear-gradient(90deg,rgba(11,110,253,0.12),rgba(11,110,253,0.03));padding:8px;border-radius:6px}
-    .search-hit{background:rgba(11,110,253,0.08);padding:2px 4px;border-radius:3px}
-    .copy-btn{float:right;background:transparent;border:0;color:var(--muted);cursor:pointer}
-    .disorders{display:flex;flex-wrap:wrap;gap:8px}
-    .print-only{display:none}
-    @media print{.controls,nav,header,footer{display:none}.print-only{display:block}}
+    .highlight{background:rgba(11,110,253,0.12);padding:8px;border-radius:6px}
+    .search-hit{background:rgba(11,110,253,0.2);padding:2px 4px;border-radius:3px}
+
+    .flashcard-container{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+    .flashcard{background:#ffffff;border:1px solid #d1d5db;padding:16px;border-radius:10px;width:240px;cursor:pointer;transition:0.2s}
+    .flashcard:hover{background:#f3f4f6}
+
+    .quiz-question{margin-top:16px;padding:16px;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb}
+    .quiz-option{padding:8px;background:white;border:1px solid #d1d5db;border-radius:6px;margin-top:8px;cursor:pointer}
+    .quiz-option:hover{background:#f3f4f6}
   </style>
 </head>
 <body>
@@ -514,6 +518,34 @@
     <footer>
       <div>Tip: Use the search box to highlight terms. Click <em>Expand All</em> to see everything at once or print from the browser to create a PDF.</div>
     </footer>
+
+<section class="card">
+  <h2>Flashcards</h2>
+  <p>Click to flip. Great for quick review.</p>
+  <div class="flashcard-container">
+    <div class="flashcard" onclick="this.innerHTML = this.innerHTML.includes('Filtration') ? 'What are the 3 renal processes?' : 'Filtration, Reabsorption, Secretion'">What are the 3 renal processes?</div>
+    <div class="flashcard" onclick="this.innerHTML = this.innerHTML.includes('ADH') ? 'What hormone concentrates urine?' : 'ADH — reabsorbs water in collecting duct'">What hormone concentrates urine?</div>
+    <div class="flashcard" onclick="this.innerHTML = this.innerHTML.includes('Fight') ? 'SNS function?' : 'Fight or flight — mobilizes energy'">SNS function?</div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Practice Quiz</h2>
+  <div class="quiz-question">
+    <strong>1. Which part of the nephron is the main site of water reabsorption?</strong>
+    <div class="quiz-option">A: DCT</div>
+    <div class="quiz-option">B: Collecting duct</div>
+    <div class="quiz-option">C: Loop of Henle</div>
+    <div class="quiz-option">D: Bowman’s capsule</div>
+  </div>
+  <div class="quiz-question">
+    <strong>2. What does aldosterone do?</strong>
+    <div class="quiz-option">A: Decreases Na+ reabsorption</div>
+    <div class="quiz-option">B: Increases Na+ reabsorption</div>
+    <div class="quiz-option">C: Decreases water reabsorption</div>
+    <div class="quiz-option">D: Triggers urine dilution</div>
+  </div>
+</section>
   </div>
 
   <script>
