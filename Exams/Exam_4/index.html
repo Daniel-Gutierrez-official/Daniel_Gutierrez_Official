@@ -6,26 +6,34 @@
   <title>BIOL3184 — Exam 4 Study Guide</title>
   <style>
     :root{--accent:#0b6efd;--bg:#ffffff;--card:#f5f7fb;--muted:#4b5563;--glass:rgba(0,0,0,0.05)}
+    .dark{--accent:#4f46e5;--bg:#0b1220;--card:#071229;--muted:#9aa6b2;--glass:rgba(255,255,255,0.03);color:#e6eef6}
     html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,'Helvetica Neue',Arial;color:#111;background:#f0f2f5;}
+    body.dark{background:linear-gradient(180deg,#071026 0%, #071729 60%);}
     .app{max-width:1100px;margin:28px auto;padding:28px;background:white;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+    body.dark .app{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
     header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
-    header h1{margin:0;font-size:22px;color:#111}
+    header h1{margin:0;font-size:22px;color:var(--muted)}
     header p{margin:0;color:var(--muted);font-size:14px}
 
     .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
     .search{flex:1;min-width:220px}
     input[type=search]{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #d1d5db;background:white;color:inherit}
+    body.dark input[type=search]{background:#0a1220;border-color:rgba(255,255,255,0.06);color:var(--muted)}
     .btn{padding:10px 12px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer}
     .btn.ghost{background:white;border:1px solid #d1d5db;color:#111}
+    body.dark .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
 
     nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
     nav button{background:#e5e7eb;border:1px solid #d1d5db;color:#374151;padding:8px 10px;border-radius:8px;cursor:pointer}
+    body.dark nav button{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
 
     .grid{display:grid;grid-template-columns:1fr;gap:12px}
     .card{background:#ffffff;padding:18px;border-radius:10px;border:1px solid #e5e7eb}
+    body.dark .card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
     h2{margin-top:0;color:#111}
     .section-intro{color:var(--muted);font-size:14px;margin-bottom:12px}
     details{background:#f9fafb;padding:12px;border-radius:8px;border:1px solid #e5e7eb}
+    body.dark details{background:transparent;border:1px solid rgba(255,255,255,0.03)}
     summary{font-weight:600;cursor:pointer;color:#111}
     ul{margin:8px 0 12px 18px}
     li{margin:6px 0}
@@ -38,13 +46,33 @@
     .highlight{background:rgba(11,110,253,0.12);padding:8px;border-radius:6px}
     .search-hit{background:rgba(11,110,253,0.2);padding:2px 4px;border-radius:3px}
 
+    /* Flashcard flip animation */
     .flashcard-container{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
-    .flashcard{background:#ffffff;border:1px solid #d1d5db;padding:16px;border-radius:10px;width:240px;cursor:pointer;transition:0.2s}
-    .flashcard:hover{background:#f3f4f6}
+    .flashcard{width:240px;height:140px;perspective:1000px}
+    .flashcard-inner{position:relative;width:100%;height:100%;transition:transform 0.6s;transform-style:preserve-3d;border-radius:10px}
+    .flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
+    .flashcard-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;padding:12px;border-radius:10px;border:1px solid #d1d5db;background:#fff}
+    body.dark .flashcard-face{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+    .flashcard-back{transform:rotateY(180deg)}
 
     .quiz-question{margin-top:16px;padding:16px;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb}
     .quiz-option{padding:8px;background:white;border:1px solid #d1d5db;border-radius:6px;margin-top:8px;cursor:pointer}
     .quiz-option:hover{background:#f3f4f6}
+    .quiz-option.correct{background:#d1fae5}
+    .quiz-option.incorrect{background:#fee2e2}
+
+    /* Modal for results */
+    .modal{position:fixed;left:0;top:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.4)}
+    .modal.show{display:flex}
+    .modal-card{background:white;padding:20px;border-radius:10px;min-width:300px}
+    body.dark .modal-card{background:#071229;color:var(--muted)}
+
+    .theme-toggle{margin-left:auto;padding:8px 10px;border-radius:8px;border:1px solid #d1d5db;background:#fff;cursor:pointer}
+    body.dark .theme-toggle{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+
+    /* Simple page layout for SPA */
+    .page{display:block;transition:opacity 0.25s}
+    .page.hidden{display:none}
   </style>
 </head>
 <body>
@@ -66,17 +94,18 @@
       <button class="btn" id="print">Print / Save PDF</button>
     </div>
 
-    <nav aria-label="Quick jump">
-      <button data-jump="urinary">Urinary System</button>
-      <button data-jump="nephron">Nephron</button>
-      <button data-jump="hormones">Hormones (ADH / Aldosterone)</button>
-      <button data-jump="nervous">Nervous System</button>
-      <button data-jump="brain">Brain & Brainstem</button>
-      <button data-jump="spinal">Spinal Cord</button>
-      <button data-jump="pns">PNS & Receptors</button>
-      <button data-jump="ans">Autonomic NS</button>
-      <button data-jump="endocrine">Endocrine</button>
-      <button data-jump="disorders">Disorders (Word bank)</button>
+    <nav aria-label="Quick jump" id="toc">
+      <h3>Table of Contents</h3>
+      <button data-jump="urinary">1. Urinary System</button>
+      <button data-jump="nephron">2. Nephron</button>
+      <button data-jump="hormones">3. Hormones</button>
+      <button data-jump="nervous">4. Nervous System</button>
+      <button data-jump="brain">5. Brain & Brainstem</button>
+      <button data-jump="spinal">6. Spinal Cord</button>
+      <button data-jump="pns">7. PNS & Receptors</button>
+      <button data-jump="ans">8. ANS</button>
+      <button data-jump="endocrine">9. Endocrine</button>
+      <button data-jump="disorders">10. Disorders</button>
     </nav>
 
     <div class="grid">
@@ -520,91 +549,150 @@
     </footer>
 
 <section class="card">
-  <h2>Flashcards</h2>
-  <p>Click to flip. Great for quick review.</p>
-  <div class="flashcard-container">
-    <div class="flashcard" onclick="this.innerHTML = this.innerHTML.includes('Filtration') ? 'What are the 3 renal processes?' : 'Filtration, Reabsorption, Secretion'">What are the 3 renal processes?</div>
-    <div class="flashcard" onclick="this.innerHTML = this.innerHTML.includes('ADH') ? 'What hormone concentrates urine?' : 'ADH — reabsorbs water in collecting duct'">What hormone concentrates urine?</div>
-    <div class="flashcard" onclick="this.innerHTML = this.innerHTML.includes('Fight') ? 'SNS function?' : 'Fight or flight — mobilizes energy'">SNS function?</div>
-  </div>
-</section>
-
-<section class="card">
   <h2>Practice Quiz</h2>
-  <div class="quiz-question">
-    <strong>1. Which part of the nephron is the main site of water reabsorption?</strong>
-    <div class="quiz-option">A: DCT</div>
-    <div class="quiz-option">B: Collecting duct</div>
-    <div class="quiz-option">C: Loop of Henle</div>
-    <div class="quiz-option">D: Bowman’s capsule</div>
-  </div>
-  <div class="quiz-question">
-    <strong>2. What does aldosterone do?</strong>
-    <div class="quiz-option">A: Decreases Na+ reabsorption</div>
-    <div class="quiz-option">B: Increases Na+ reabsorption</div>
-    <div class="quiz-option">C: Decreases water reabsorption</div>
-    <div class="quiz-option">D: Triggers urine dilution</div>
-  </div>
+  <p>Full exam-style questions generated from all PowerPoint content.</p>
+  <div id="quiz-container"></div>
 </section>
-  </div>
+<script>
+// --- SPA navigation (show/hide sections as pages)
+(function(){
+  const pages = ['urinary','nephron','hormones','nervous','brain','spinal','pns','ans','endocrine','disorders'];
+  function show(id){
+    pages.forEach(p=>{const el=document.getElementById(p); if(!el) return; if(p===id){el.classList.remove('hidden'); el.scrollIntoView({behavior:'smooth',block:'start'})} else el.classList.add('hidden')});
+    // update hash
+    history.replaceState(null,'', '#'+id);
+  }
+  // initial
+  const hash = location.hash.replace('#','') || 'urinary'; show(hash);
+  document.querySelectorAll('nav button, #toc button').forEach(b=>b.addEventListener('click', ()=>{const id=b.getAttribute('data-jump'); if(id) show(id);}));
+  window.addEventListener('hashchange', ()=>{show(location.hash.replace('#',''))});
+})();
 
-  <script>
-    // Simple search & highlight
-    const q = document.getElementById('q');
-    const clear = document.getElementById('clear');
-    const expandAll = document.getElementById('expandAll');
-    const collapseAll = document.getElementById('collapseAll');
-    const printBtn = document.getElementById('print');
+// --- Theme toggle
+(function(){
+  const btn=document.createElement('button'); btn.className='theme-toggle'; btn.textContent='Toggle Dark';
+  document.querySelector('header').appendChild(btn);
+  function applyTheme(dark){ document.body.classList.toggle('dark', !!dark); localStorage.setItem('theme-dark', !!dark); btn.textContent = dark ? 'Light mode' : 'Dark mode'; }
+  btn.addEventListener('click', ()=>applyTheme(!document.body.classList.contains('dark')));
+  const saved = localStorage.getItem('theme-dark') === 'true'; applyTheme(saved);
+})();
 
-    function escapeHtml(text){return text.replace(/[&<>\"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+// --- Rebuild flashcards with animated flip
+(function(){
+  const data = window.flashData || [];
+  const container = document.getElementById('all-flashcards');
+  container.innerHTML='';
+  data.forEach(([q,a])=>{
+    const outer=document.createElement('div'); outer.className='flashcard';
+    const inner=document.createElement('div'); inner.className='flashcard-inner';
+    const face=document.createElement('div'); face.className='flashcard-face flashcard-front'; face.textContent=q;
+    const back=document.createElement('div'); back.className='flashcard-face flashcard-back'; back.textContent=a;
+    inner.appendChild(face); inner.appendChild(back); outer.appendChild(inner);
+    outer.addEventListener('click', ()=>outer.classList.toggle('flipped'));
+    container.appendChild(outer);
+  });
+})();
 
-    function search(term){
-      // remove old highlights
-      document.querySelectorAll('.search-hit').forEach(n=>{
-        const parent = n.parentNode;
-        parent.replaceChild(document.createTextNode(n.textContent), n);
+// --- Enhanced Quiz Engine (Random Order + Instant Feedback + Multiple Sets)
+(function(){
+  // --- Full quiz bank by category
+  const quizBank = {
+    urinary: [
+      {q:'Main renal processes?', o:['Filtration only','Filtration, Reabsorption, Secretion','Reabsorption only','Secretion only'], a:1},
+      {q:'Where is most water reabsorbed?', o:['DCT','Collecting duct','PCT','Renal pelvis'], a:2},
+      {q:'What concentrates urine?', o:['Aldosterone','ADH','Renin','ANP'], a:1}
+    ],
+    nervous: [
+      {q:'Myelin in CNS made by?', o:['Schwann cells','Astrocytes','Oligodendrocytes','Microglia'], a:2},
+      {q:'Resting membrane potential is roughly?', o:['+30mV','0mV','-70mV','-40mV'], a:2},
+      {q:'Neuron that carries commands OUT of CNS?', o:['Sensory','Interneuron','Motor','Glial'], a:2}
+    ],
+    endocrine: [
+      {q:'Antagonistic hormones?', o:['Aldosterone & ADH','Insulin & Glucagon','TSH & Cortisol','Calcitonin & ADH'], a:1},
+      {q:'Master endocrine gland?', o:['Pituitary','Thyroid','Pineal','Hypothalamus'], a:0},
+      {q:'Calcitonin function?', o:['Raise blood calcium','Lower blood calcium','Increase sodium levels','Stimulate insulin'], a:1}
+    ]
+  };
+
+  // Combine all sets
+  const combined = [...quizBank.urinary, ...quizBank.nervous, ...quizBank.endocrine];
+
+  // Randomize
+  function shuffle(arr){return arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(p=>p[1]);}
+  const quizData = shuffle(combined);
+
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  let selections = new Array(quizData.length).fill(null);
+  const optionMap = [];
+
+  quizData.forEach((item,i)=>{
+    const wrap=document.createElement('div'); wrap.className='quiz-question';
+    wrap.innerHTML = `<strong>${i+1}. ${item.q}</strong>`;
+
+    const opts=[];
+    item.o.forEach((opt,idx)=>{
+      const btn=document.createElement('div'); btn.className='quiz-option'; btn.textContent=opt;
+
+      // Instant feedback
+      btn.addEventListener('click', ()=>{
+        selections[i]=idx;
+        if(idx === item.a){ btn.classList.add('correct'); }
+        else { btn.classList.add('incorrect'); }
       });
-      if(!term) return;
-      const re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'ig');
-      const walker = document.createTreeWalker(document.querySelector('.app'), NodeFilter.SHOW_TEXT, null);
-      while(walker.nextNode()){
-        const node = walker.currentNode;
-        if(node.parentNode && ['SCRIPT','STYLE'].includes(node.parentNode.tagName)) continue;
-        const m = node.nodeValue.match(re);
-        if(m){
-          const span = document.createElement('span');
-          span.className='search-hit';
-          const frag = document.createDocumentFragment();
-          let lastIndex = 0; let text = node.nodeValue;
-          text.replace(re, (match, idx)=>{
-            if(idx>lastIndex) frag.appendChild(document.createTextNode(text.slice(lastIndex, idx)));
-            const s = document.createElement('span'); s.className='search-hit'; s.textContent = match; frag.appendChild(s);
-            lastIndex = idx + match.length;
-          });
-          if(lastIndex < text.length) frag.appendChild(document.createTextNode(text.slice(lastIndex)));
-          node.parentNode.replaceChild(frag, node);
-        }
+
+      wrap.appendChild(btn);
+      opts.push(btn);
+    });
+    optionMap[i]=opts;
+    container.appendChild(wrap);
+  });
+
+  // --- Results Button
+  const submit=document.createElement('button'); submit.className='btn'; submit.textContent='Submit Quiz'; submit.style.marginTop='12px';
+  container.appendChild(submit);
+
+  // --- Modal
+  const modal=document.createElement('div'); modal.className='modal';
+  const card=document.createElement('div'); card.className='modal-card';
+  modal.appendChild(card); document.body.appendChild(modal);
+
+  submit.addEventListener('click', ()=>{
+    let score = 0;
+    quizData.forEach((q,i)=>{ if(selections[i] === q.a) score++; });
+    const percent = Math.round((score / quizData.length) * 100);
+    card.innerHTML = `<h3>Your score: ${score}/${quizData.length} (${percent}%)</h3><p>Correct answers are highlighted in green. Incorrect in red.</p>`;
+    modal.classList.add('show');
+  });
+
+  modal.addEventListener('click', e=>{ if(e.target===modal) modal.classList.remove('show'); });
+})();
+
+modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('show'); });
+})();
+
+// --- Improve original search to ignore hidden pages and work with SPA
+(function(){
+  const q = document.getElementById('q');
+  function search(term){
+    document.querySelectorAll('.search-hit').forEach(n=>{const p=n.parentNode; p.replaceChild(document.createTextNode(n.textContent), n);});
+    if(!term) return;
+    const re = new RegExp(term.replace(/[.*+?^${}()|[\]\]/g,'\$&'), 'ig');
+    const walker = document.createTreeWalker(document.querySelector('.app'), NodeFilter.SHOW_TEXT, null);
+    while(walker.nextNode()){
+      const node=walker.currentNode; if(node.parentNode && ['SCRIPT','STYLE'].includes(node.parentNode.tagName)) continue;
+      if(node.nodeValue.match(re)){
+        const frag=document.createDocumentFragment(); let last=0; const text=node.nodeValue;
+        text.replace(re,(m,idx)=>{ if(idx>last) frag.appendChild(document.createTextNode(text.slice(last,idx))); const s=document.createElement('span'); s.className='search-hit'; s.textContent=m; frag.appendChild(s); last=idx+m.length; });
+        if(last<text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+        node.parentNode.replaceChild(frag, node);
       }
     }
-
-    q.addEventListener('input', e=>{search(e.target.value.trim())});
-    clear.addEventListener('click', ()=>{q.value='';search('');q.focus();});
-
-    expandAll.addEventListener('click', ()=>{document.querySelectorAll('details').forEach(d=>d.open=true)});
-    collapseAll.addEventListener('click', ()=>{document.querySelectorAll('details').forEach(d=>d.open=false)});
-
-    document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click', ()=>{
-      const id = b.getAttribute('data-jump');
-      const el = document.getElementById(id);
-      if(el){el.scrollIntoView({behavior:'smooth',block:'start'}); el.querySelector('details')?.setAttribute('open','');}
-    }));
-
-    printBtn.addEventListener('click', ()=>window.print());
-
-    // keyboard: Ctrl+F focuses search
-    window.addEventListener('keydown', e=>{
-      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='f'){ e.preventDefault(); q.focus(); q.select(); }
-    });
-  </script>
+  }
+  q.addEventListener('input', e=>search(e.target.value.trim()));
+  document.getElementById('clear').addEventListener('click', ()=>{q.value='';search('');q.focus();});
+})();
+</script>
 </body>
 </html>
