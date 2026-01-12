@@ -7,18 +7,16 @@
     <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-    <script>
-    navigator.mediaDevices.getUserMedia({ video: true })
-  .then(function(stream) {
-    // Use the stream in a video element
-    var videoElement = document.querySelector('video');
-    videoElement.srcObject = stream;
-    videoElement.play();
-  })
-  .catch(function(err) {
-    // Handle error if permission is denied or camera unavailable
-    console.log("An error occurred: " + err);
-  });
+<video id="remoteVideo" autoplay playsinline></video>
+<script>
+const pc = new RTCPeerConnection();
+
+pc.ontrack = e => {
+  document.getElementById("remoteVideo").srcObject = e.streams[0];
+};
+
+// signaling logic goes here
 </script>
+
 </body>
 </html>
