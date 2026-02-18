@@ -7,16 +7,7 @@
     <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-<video id="remoteVideo" autoplay playsinline></video>
-<script>
-const pc = new RTCPeerConnection();
 
-pc.ontrack = e => {
-  document.getElementById("remoteVideo").srcObject = e.streams[0];
-};
-
-// signaling logic goes here
-</script>
 
 </body>
 </html>
