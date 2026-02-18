@@ -3,215 +3,214 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prokaryotic Cells Quiz</title>
+<title>Advanced Prokaryotic Cells Quiz</title>
 
 <style>
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f6f9;
+    background: #eef2f7;
     margin: 0;
     padding: 20px;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: auto;
     background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
 
 h1 {
     text-align: center;
 }
 
+.timer {
+    text-align: right;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
 .question {
     margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background: #f8fafc;
 }
 
 .answers label {
     display: block;
-    padding: 6px;
+    padding: 8px;
+    margin: 4px 0;
+    border-radius: 6px;
     cursor: pointer;
+}
+
+.correct {
+    background-color: #d4edda;
+}
+
+.incorrect {
+    background-color: #f8d7da;
 }
 
 button {
-    display: block;
     width: 100%;
     padding: 12px;
+    margin-top: 20px;
     font-size: 16px;
-    background-color: #2c7be5;
-    color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    margin-top: 20px;
 }
 
-button:hover {
-    background-color: #1a5fd1;
+.submit-btn {
+    background-color: #2c7be5;
+    color: white;
+}
+
+.restart-btn {
+    background-color: #28a745;
+    color: white;
 }
 
 .result {
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: bold;
     text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
 }
 </style>
 </head>
 
 <body>
 <div class="container">
-    <h1>Prokaryotic Cells & Microorganisms Quiz</h1>
+    <h1>Advanced Prokaryotic Cells Quiz</h1>
+    <div class="timer" id="timer">Time Remaining: 15:00</div>
     <form id="quizForm"></form>
-    <button onclick="submitQuiz()">Submit Quiz</button>
+    <button class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+    <button class="restart-btn" onclick="restartQuiz()">Restart Quiz</button>
     <div class="result" id="result"></div>
 </div>
 
 <script>
 const quizData = [
-{
-    question: "1. All living cells contain which of the following?",
-    options: ["Chloroplasts", "Membrane-bound organelles", "DNA and ribosomes", "A nucleus"],
-    answer: 2
-},
-{
-    question: "2. Prokaryotic cells differ from eukaryotic cells because they:",
-    options: ["Have mitochondria", "Lack a nucleus", "Have membrane-bound organelles", "Contain linear chromosomes"],
-    answer: 1
-},
-{
-    question: "3. The primary component of bacterial cell walls is:",
-    options: ["Cellulose", "Chitin", "Peptidoglycan", "Sterols"],
-    answer: 2
-},
-{
-    question: "4. Gram-positive bacteria stain ______ after a Gram stain procedure.",
-    options: ["Red", "Pink", "Purple", "Colorless"],
-    answer: 2
-},
-{
-    question: "5. Gram-negative bacteria contain which unique outer membrane component?",
-    options: ["Teichoic acid", "Lipopolysaccharide (LPS)", "Mycolic acid", "Flagellin"],
-    answer: 1
-},
-{
-    question: "6. The function of flagella is:",
-    options: ["DNA transfer", "Protein synthesis", "Attachment", "Motility"],
-    answer: 3
-},
-{
-    question: "7. A bacterium with flagella at both ends is described as:",
-    options: ["Monotrichous", "Amphitrichous", "Peritrichous", "Lophotrichous"],
-    answer: 1
-},
-{
-    question: "8. Fimbriae primarily function in:",
-    options: ["Motility", "Protein production", "Adhesion", "Photosynthesis"],
-    answer: 2
-},
-{
-    question: "9. Pili are primarily involved in:",
-    options: ["Energy production", "Conjugation", "Capsule formation", "Endospore formation"],
-    answer: 1
-},
-{
-    question: "10. The glycocalyx may form a highly organized structure called a:",
-    options: ["Slime layer", "Capsule", "Peptidoglycan", "Porin"],
-    answer: 1
-},
-{
-    question: "11. The cytoplasm of bacteria is approximately ______ water.",
-    options: ["10–20%", "30–40%", "50–60%", "70–80%"],
-    answer: 3
-},
-{
-    question: "12. Prokaryotic ribosomes are:",
-    options: ["80S", "70S", "50S only", "30S only"],
-    answer: 1
-},
-{
-    question: "13. Plasmids are:",
-    options: ["Essential for survival", "Found only in eukaryotes", "Small circular DNA molecules", "Ribosomal subunits"],
-    answer: 2
-},
-{
-    question: "14. Endospores are:",
-    options: ["A form of reproduction", "Metabolically active cells", "Highly resistant survival structures", "Found in all bacteria"],
-    answer: 2
-},
-{
-    question: "15. Which genera are known for producing endospores?",
-    options: ["Escherichia and Salmonella", "Clostridium and Bacillus", "Mycoplasma and Nocardia", "Rickettsia and Chlamydia"],
-    answer: 1
-},
-{
-    question: "16. A spherical bacterium is called a:",
-    options: ["Bacillus", "Spirillum", "Coccus", "Vibrio"],
-    answer: 2
-},
-{
-    question: "17. A spring-like bacterium is called a:",
-    options: ["Spirillum", "Spirochete", "Vibrio", "Coccobacillus"],
-    answer: 1
-},
-{
-    question: "18. The Gram stain is considered a:",
-    options: ["Simple stain", "Structural stain", "Differential stain", "Capsule stain"],
-    answer: 2
-},
-{
-    question: "19. Mycobacterium species are identified using which stain?",
-    options: ["Gram stain", "Endospore stain", "Acid-fast stain", "Capsule stain"],
-    answer: 2
-},
-{
-    question: "20. The two domains of prokaryotes are:",
-    options: ["Bacteria and Eukarya", "Archaea and Bacteria", "Protista and Bacteria", "Archaea and Fungi"],
-    answer: 1
-}
+{q:"All living cells contain which of the following?",o:["Chloroplasts","Membrane-bound organelles","DNA and ribosomes","A nucleus"],a:2},
+{q:"Prokaryotic cells differ from eukaryotic cells because they:",o:["Have mitochondria","Lack a nucleus","Have membrane-bound organelles","Contain linear chromosomes"],a:1},
+{q:"Primary component of bacterial cell walls:",o:["Cellulose","Chitin","Peptidoglycan","Sterols"],a:2},
+{q:"Gram-positive bacteria stain:",o:["Red","Pink","Purple","Colorless"],a:2},
+{q:"Gram-negative outer membrane contains:",o:["Teichoic acid","Lipopolysaccharide","Mycolic acid","Capsule"],a:1},
+{q:"Function of flagella:",o:["Attachment","Motility","Protein synthesis","Conjugation"],a:1},
+{q:"Flagella at both ends:",o:["Monotrichous","Amphitrichous","Peritrichous","Lophotrichous"],a:1},
+{q:"Fimbriae function in:",o:["Motility","Adhesion","Energy production","DNA replication"],a:1},
+{q:"Pili function in:",o:["Conjugation","Photosynthesis","Capsule formation","Metabolism"],a:0},
+{q:"Highly organized glycocalyx:",o:["Slime layer","Capsule","Porin","Plasmid"],a:1},
+{q:"Bacterial cytoplasm is about:",o:["20% water","40% water","70–80% water","90% water"],a:2},
+{q:"Prokaryotic ribosomes are:",o:["80S","70S","60S","30S"],a:1},
+{q:"Plasmids are:",o:["Linear DNA","Small circular DNA","RNA fragments","Proteins"],a:1},
+{q:"Endospores are:",o:["Reproductive cells","Highly resistant structures","Metabolically active","Common in all bacteria"],a:1},
+{q:"Endospore producers include:",o:["E. coli","Clostridium","Mycoplasma","Rickettsia"],a:1},
+{q:"Spherical bacteria:",o:["Bacillus","Spirillum","Coccus","Vibrio"],a:2},
+{q:"Spring-like bacteria:",o:["Spirillum","Spirochete","Vibrio","Coccobacillus"],a:1},
+{q:"Gram stain is a:",o:["Simple stain","Differential stain","Capsule stain","Endospore stain"],a:1},
+{q:"Mycobacterium identified by:",o:["Gram stain","Acid-fast stain","Capsule stain","Negative stain"],a:1},
+{q:"Two prokaryotic domains:",o:["Archaea & Bacteria","Bacteria & Eukarya","Protista & Bacteria","Archaea & Fungi"],a:0},
+
+{q:"Peptidoglycan is composed of alternating:",o:["NAG and NAM","DNA and RNA","Lipids and proteins","Sterols and sugars"],a:0},
+{q:"Teichoic acids are found in:",o:["Gram-negative","Gram-positive","Archaea only","Mycoplasma"],a:1},
+{q:"Outer membrane porins function in:",o:["DNA replication","Selective transport","Motility","Protein synthesis"],a:1},
+{q:"Chemotaxis refers to movement toward:",o:["Light","Chemicals","Heat","Water"],a:1},
+{q:"Counterclockwise flagella rotation causes:",o:["Tumble","Run","Stop","Reverse growth"],a:1},
+{q:"Peritrichous means:",o:["One flagellum","Flagella at ends","Flagella all over","No flagella"],a:2},
+{q:"Mycoplasma lack:",o:["DNA","Cell membrane","Cell wall","Ribosomes"],a:2},
+{q:"Acid-fast bacteria contain:",o:["Peptidoglycan only","Mycolic acid","Teichoic acid","Porins"],a:1},
+{q:"Bacterial chromosome is typically:",o:["Linear","Multiple","Circular","RNA-based"],a:2},
+{q:"Bacterial ribosomes consist of:",o:["40S & 60S","50S & 30S","20S & 40S","80S"],a:1},
+{q:"Inclusions function as:",o:["Motility structures","Storage bodies","Reproductive units","Outer membranes"],a:1},
+{q:"Endospores are destroyed by:",o:["Boiling water","Freezing","120°C pressurized steam","Dry heat at 50°C"],a:2},
+{q:"Spirochetes differ from spirilla because they:",o:["Are thick","Have axial filaments","Are nonpathogenic","Have no flagella"],a:1},
+{q:"Cocci in chains are called:",o:["Staphylococci","Diplococci","Streptococci","Sarcina"],a:2},
+{q:"Cocci in clusters:",o:["Streptococci","Diplococci","Staphylococci","Tetrads"],a:2},
+{q:"Domain Archaea are often:",o:["Pathogenic only","Extremophiles","Multicellular","Gram-positive only"],a:1},
+{q:"Cyanobacteria perform:",o:["Anaerobic respiration","Photosynthesis","Fermentation only","Endospore formation"],a:1},
+{q:"Green sulfur bacteria do NOT produce:",o:["ATP","Oxygen","Pigments","Electrons"],a:1},
+{q:"Rickettsias are:",o:["Free-living","Obligate intracellular","Photosynthetic","Gram-positive"],a:1},
+{q:"Bergey’s Manual classifies bacteria based on:",o:["Color","Genetics","Size only","Habitat only"],a:1}
 ];
 
-const quizForm = document.getElementById("quizForm");
+function shuffle(array){
+    return array.sort(()=>Math.random()-0.5);
+}
 
-quizData.forEach((q, index) => {
-    const questionDiv = document.createElement("div");
-    questionDiv.classList.add("question");
-
-    questionDiv.innerHTML = `<p>${q.question}</p>`;
-
-    const answersDiv = document.createElement("div");
-    answersDiv.classList.add("answers");
-
-    q.options.forEach((option, i) => {
-        answersDiv.innerHTML += `
+function loadQuiz(){
+    const form=document.getElementById("quizForm");
+    form.innerHTML="";
+    shuffle(quizData);
+    quizData.forEach((item,index)=>{
+        const div=document.createElement("div");
+        div.classList.add("question");
+        const shuffledOptions=shuffle([...item.o]);
+        div.innerHTML=`<p>${index+1}. ${item.q}</p>`;
+        shuffledOptions.forEach(option=>{
+            div.innerHTML+=`
             <label>
-                <input type="radio" name="question${index}" value="${i}">
-                ${option}
-            </label>
-        `;
+            <input type="radio" name="q${index}" value="${option}">
+            ${option}
+            </label>`;
+        });
+        form.appendChild(div);
+        item.shuffled=shuffledOptions;
     });
+}
 
-    questionDiv.appendChild(answersDiv);
-    quizForm.appendChild(questionDiv);
-});
-
-function submitQuiz() {
-    let score = 0;
-
-    quizData.forEach((q, index) => {
-        const selected = document.querySelector(`input[name="question${index}"]:checked`);
-        if (selected && parseInt(selected.value) === q.answer) {
-            score++;
+function submitQuiz(){
+    let score=0;
+    quizData.forEach((item,index)=>{
+        const selected=document.querySelector(`input[name="q${index}"]:checked`);
+        const correctAnswer=item.o[item.a];
+        const labels=document.getElementsByName(`q${index}`);
+        labels.forEach(radio=>{
+            if(radio.value===correctAnswer){
+                radio.parentElement.classList.add("correct");
+            }
+        });
+        if(selected){
+            if(selected.value===correctAnswer){
+                score++;
+            }else{
+                selected.parentElement.classList.add("incorrect");
+            }
         }
     });
-
-    const result = document.getElementById("result");
-    result.innerHTML = `You scored ${score} out of ${quizData.length}`;
+    const percent=Math.round((score/quizData.length)*100);
+    document.getElementById("result").innerHTML=
+        `Score: ${score}/${quizData.length} (${percent}%)`;
 }
-</script>
 
+function restartQuiz(){
+    location.reload();
+}
+
+let time=900;
+function startTimer(){
+    const timer=document.getElementById("timer");
+    const interval=setInterval(()=>{
+        let minutes=Math.floor(time/60);
+        let seconds=time%60;
+        seconds=seconds<10?"0"+seconds:seconds;
+        timer.textContent=`Time Remaining: ${minutes}:${seconds}`;
+        time--;
+        if(time<0){
+            clearInterval(interval);
+            submitQuiz();
+            alert("Time is up!");
+        }
+    },1000);
+}
+
+loadQuiz();
+startTimer();
+</script>
 </body>
 </html>
