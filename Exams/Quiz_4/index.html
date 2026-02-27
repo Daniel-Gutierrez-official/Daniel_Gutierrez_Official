@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microbiology Lecture 5 Quiz</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    color: black;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+h1 {
+    text-align: center;
+}
+
+.question {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.answers button {
+    display: block;
+    margin: 8px 0;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #f0f0f0;
+    transition: 0.3s;
+}
+
+.answers button:hover {
+    background: #dcdcdc;
+}
+
+.correct {
+    background-color: #4CAF50 !important;
+    color: white;
+}
+
+.wrong {
+    background-color: #f44336 !important;
+    color: white;
+}
+
+#nextBtn, #restartBtn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #2a5298;
+    color: white;
+}
+
+#score {
+    font-size: 18px;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Microbiology Lecture 5 Quiz</h1>
+    <div id="quiz"></div>
+    <div id="score"></div>
+    <button id="nextBtn">Next Question</button>
+    <button id="restartBtn" style="display:none;">Restart Quiz</button>
+</div>
+
+<script>
+const quizData = [
+{question:"1. Macronutrients are required in:", a:"Small amounts", b:"Large amounts", c:"No amounts", d:"Only water", correct:"b"},
+{question:"2. Micronutrients are also called:", a:"Trace elements", b:"Proteins", c:"Carbohydrates", d:"Lipids", correct:"a"},
+{question:"3. 96% of a cell is composed of how many elements?", a:"4", b:"5", c:"6", d:"8", correct:"c"},
+{question:"4. An organism that uses CO2 as carbon source is a:", a:"Heterotroph", b:"Autotroph", c:"Parasite", d:"Saprobe", correct:"b"},
+{question:"5. Chemotrophs obtain energy from:", a:"Light", b:"Heat", c:"Chemical compounds", d:"Oxygen only", correct:"c"},
+{question:"6. Phototrophs obtain energy from:", a:"Chemicals", b:"Photosynthesis", c:"Nitrogen", d:"Salt", correct:"b"},
+{question:"7. Methanogens are a type of:", a:"Photoheterotroph", b:"Chemoautotroph", c:"Saprobe", d:"Parasite", correct:"b"},
+{question:"8. Saprobes feed on:", a:"Living host", b:"Organic detritus", c:"Oxygen", d:"CO2", correct:"b"},
+{question:"9. Plasmolysis occurs in:", a:"Hypotonic solution", b:"Isotonic solution", c:"Hypertonic solution", d:"Neutral solution", correct:"c"},
+{question:"10. Minimum temperature is:", a:"Fastest growth", b:"Lowest temperature permitting growth", c:"Highest temperature permitting growth", d:"Boiling point", correct:"b"},
+{question:"11. Mesophiles grow best at:", a:"Below 15°C", b:"20–40°C", c:"Above 45°C", d:"0°C", correct:"b"},
+{question:"12. Psychrophiles grow best at:", a:"Below 15°C", b:"20–40°C", c:"Above 45°C", d:"100°C", correct:"a"},
+{question:"13. Obligate aerobes:", a:"Cannot use oxygen", b:"Require oxygen", c:"Tolerate oxygen only", d:"Are killed by oxygen", correct:"b"},
+{question:"14. Obligate anaerobes:", a:"Need oxygen", b:"Cannot survive oxygen", c:"Use light", d:"Fix nitrogen", correct:"b"},
+{question:"15. Catalase helps neutralize:", a:"CO2", b:"Peroxide", c:"Nitrogen", d:"Salt", correct:"b"},
+{question:"16. Neutrophiles grow best at pH:", a:"2", b:"6–8", c:"10", d:"12", correct:"b"},
+{question:"17. Halophiles require:", a:"High salt", b:"Low salt", c:"No oxygen", d:"High pressure", correct:"a"},
+{question:"18. Barophiles thrive in:", a:"Low temperature", b:"High pressure", c:"High salt", d:"Low pH", correct:"b"},
+{question:"19. Mutualism means:", a:"One benefits, one harmed", b:"Both benefit", c:"Neither benefit", d:"Competition", correct:"b"},
+{question:"20. Commensalism means:", a:"Both harmed", b:"Both benefit", c:"One benefits, other unaffected", d:"One dies", correct:"c"},
+{question:"21. Parasitism means:", a:"Host benefits", b:"Parasite harmed", c:"Host harmed", d:"Both benefit", correct:"c"},
+{question:"22. Binary fission produces:", a:"One cell", b:"Two daughter cells", c:"Four cells", d:"Spores", correct:"b"},
+{question:"23. Generation time is:", a:"Time for metabolism", b:"Time for doubling", c:"Time for death", d:"Time for lag phase", correct:"b"},
+{question:"24. Exponential growth increases by factor of:", a:"1", b:"2", c:"3", d:"10", correct:"b"},
+{question:"25. Lag phase is when:", a:"Rapid growth occurs", b:"Cells adapt", c:"Cells die", d:"Stationary growth", correct:"b"},
+{question:"26. Stationary phase occurs when:", a:"Cells rapidly divide", b:"Cells die exponentially", c:"Growth equals death", d:"No nutrients exist", correct:"c"},
+{question:"27. Death phase is:", a:"Constant growth", b:"Exponential death", c:"Lag time", d:"Binary fission", correct:"b"},
+{question:"28. Turbidimetry measures:", a:"Cell weight", b:"Cloudiness", c:"DNA amount", d:"Salt level", correct:"b"},
+{question:"29. Viable plate count measures:", a:"Dead cells", b:"All cells", c:"Living colonies", d:"Proteins", correct:"c"},
+{question:"30. Capnophiles prefer:", a:"High CO2", b:"Low CO2", c:"No oxygen", d:"High salt", correct:"a"}
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const quiz = document.getElementById("quiz");
+const nextBtn = document.getElementById("nextBtn");
+const restartBtn = document.getElementById("restartBtn");
+const scoreDisplay = document.getElementById("score");
+
+function loadQuestion() {
+    const q = quizData[currentQuestion];
+    quiz.innerHTML = `
+        <div class="question">${q.question}</div>
+        <div class="answers">
+            <button onclick="checkAnswer('a')">${q.a}</button>
+            <button onclick="checkAnswer('b')">${q.b}</button>
+            <button onclick="checkAnswer('c')">${q.c}</button>
+            <button onclick="checkAnswer('d')">${q.d}</button>
+        </div>
+    `;
+}
+
+function checkAnswer(answer) {
+    const correct = quizData[currentQuestion].correct;
+    const buttons = document.querySelectorAll(".answers button");
+    buttons.forEach(btn => btn.disabled = true);
+
+    if(answer === correct){
+        score++;
+        buttons[["a","b","c","d"].indexOf(answer)].classList.add("correct");
+    } else {
+        buttons[["a","b","c","d"].indexOf(answer)].classList.add("wrong");
+        buttons[["a","b","c","d"].indexOf(correct)].classList.add("correct");
+    }
+}
+
+nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if(currentQuestion < quizData.length){
+        loadQuestion();
+    } else {
+        quiz.innerHTML = "<h2>Quiz Complete!</h2>";
+        scoreDisplay.innerHTML = `Your Score: ${score} / ${quizData.length}`;
+        nextBtn.style.display = "none";
+        restartBtn.style.display = "inline-block";
+    }
+});
+
+restartBtn.addEventListener("click", () => {
+    currentQuestion = 0;
+    score = 0;
+    nextBtn.style.display = "inline-block";
+    restartBtn.style.display = "none";
+    scoreDisplay.innerHTML = "";
+    loadQuestion();
+});
+
+loadQuestion();
+</script>
+
+</body>
+</html>
