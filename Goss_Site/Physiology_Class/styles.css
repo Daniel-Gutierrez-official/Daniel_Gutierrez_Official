@@ -6,26 +6,18 @@ h1{
     font-family: Marker Felt;
     font-size: 45px;
     letter-spacing: 5px;
-    text-align: center;
-
-    
 }
-
-h2{
-    color:rgba(224, 224, 224, 0.883);
-    margin: 0px;
-    font-family: Marker Felt;
-    font-size: 15px;
-    letter-spacing: 5px;
-    text-align: center;
-}
-
-
 
 hr{
     height: 2px;
     background-color:rgb(224,224,224, 0.883);
     border: none;
+}
+
+#Profile{
+    width: 75px;
+    border-radius: 50%;
+    margin-bottom: 0px;
 }
 
 @font-face {
@@ -41,3 +33,25 @@ body{
 p{
     color: rgb(224, 224, 224, 0.883);;
 }
+
+.button {
+    background-color: rgb(224, 224, 224, 0.883);
+    border: none;
+    border-radius: 10px;
+    font-family: Marker Felt;
+    letter-spacing: 3px;
+    color: rgb(27,28,27);
+    padding: 20px 34px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+
+  .button:hover{
+    opacity: .7;
+    box-shadow: 30px;
+
+  }
