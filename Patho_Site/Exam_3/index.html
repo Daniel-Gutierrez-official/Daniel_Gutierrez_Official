@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NCLEX Exam 3 Master Quiz (Full Bank)</title>
+<style>
+body { font-family: Arial; background:#eef2f7; margin:0; text-align:center; }
+header { background:#1f2d3d; color:white; padding:20px; }
+.container { max-width:1000px; margin:20px auto; background:white; padding:20px; border-radius:10px; }
+button { padding:10px; margin:5px; border:none; border-radius:5px; cursor:pointer; background:#3498db; color:white; }
+.option { border:1px solid #ccc; margin:10px; padding:10px; border-radius:5px; cursor:pointer; }
+.correct { background:#2ecc71; color:white; }
+.wrong { background:#e74c3c; color:white; }
+.hidden { display:none; }
+.timer { font-weight:bold; }
+</style>
+</head>
+<body>
+<header><h1>NCLEX Exam 3 Master Quiz</h1></header>
+<div class="container">
+
+<div id="menu">
+<h2>Select Mode</h2>
+<button onclick="startMode('quiz')">Quiz Mode</button>
+<button onclick="startMode('study')">Study Mode</button>
+<button onclick="startMode('flash')">Flashcards</button>
+</div>
+
+<div id="quiz" class="hidden">
+<h3 id="question"></h3>
+<div id="options"></div>
+<p class="timer" id="timer"></p>
+<button onclick="nextQuestion()">Next</button>
+<p id="feedback"></p>
+<p id="progress"></p>
+</div>
+
+<div id="flash" class="hidden">
+<h3 id="flashQ"></h3>
+<p id="flashA" class="hidden"></p>
+<button onclick="flipCard()">Flip</button>
+<button onclick="nextFlash()">Next</button>
+</div>
+
+</div>
+
+<script>
+const questions = [
+
+// RESPIRATORY
+{q:"Primary function of respiratory system?", options:["Gas exchange","Circulation","Filtration","Protection"], a:["Gas exchange"], type:"single", explain:"Main role is oxygen and CO2 exchange."},
+{q:"Where are respiratory centers located?", options:["Medulla & pons","Cerebrum","Spinal cord","Hypothalamus"], a:["Medulla & pons"], type:"single", explain:"Controls breathing rhythm."},
+{q:"Diffusion in lungs refers to?", options:["Active transport","Passive gas movement","Blood pumping","Airway constriction"], a:["Passive gas movement"], type:"single"},
+{q:"Primary muscle of inspiration?", options:["Diaphragm","Abdominals","Intercostals","Trapezius"], a:["Diaphragm"], type:"single"},
+{q:"Select factors increasing airway resistance", options:["Mucus","Obstruction","Narrowing","Exercise"], a:["Mucus","Obstruction","Narrowing"], type:"multi"},
+
+// COPD
+{q:"COPD includes which conditions?", options:["Asthma","Emphysema","Chronic Bronchitis","Pneumonia"], a:["Emphysema","Chronic Bronchitis"], type:"multi"},
+{q:"Chronic bronchitis symptom?", options:["Dry cough","Productive cough","Weight loss","Fever"], a:["Productive cough"], type:"single"},
+
+// RESTRICTIVE
+{q:"Complication of aspiration?", options:["Pneumonia","Stroke","MI","Fracture"], a:["Pneumonia"], type:"single"},
+{q:"Thoracentesis is used for?", options:["Remove pleural fluid","Measure BP","ECG","Airway suction"], a:["Remove pleural fluid"], type:"single"},
+
+// FLUIDS
+{q:"Normal sodium level?", options:["135-145","120-130","150-160","100-110"], a:["135-145"], type:"single"},
+{q:"Signs of fluid overload", options:["Edema","JVD","Crackles","Dry skin"], a:["Edema","JVD","Crackles"], type:"multi"},
+{q:"Fluid deficit causes?", options:["Low BP","Tachycardia","Dizziness","Edema"], a:["Low BP","Tachycardia","Dizziness"], type:"multi"},
+
+// ELECTROLYTES
+{q:"Normal potassium?", options:["3.5-5.0","2.0-3.0","5.5-6.5","1.0-2.0"], a:["3.5-5.0"], type:"single"},
+{q:"Hypokalemia symptoms", options:["Weakness","Arrhythmias","Paralysis","Hyperactivity"], a:["Weakness","Arrhythmias","Paralysis"], type:"multi"},
+
+// ACID BASE
+{q:"Normal pH?", options:["7.35-7.45","6.8-7.0","7.5-8","6.0"], a:["7.35-7.45"], type:"single"},
+{q:"Respiratory acidosis shows", options:["High CO2","Low CO2","High pH","Low HCO3"], a:["High CO2"], type:"single"},
+{q:"Respiratory alkalosis cause", options:["Hyperventilation","Hypoventilation","Kidney failure","Shock"], a:["Hyperventilation"], type:"single"},
+
+// PRIORITY NCLEX
+{q:"Which patient first?", options:["Dyspnea","Mild cough","Headache","Fatigue"], a:["Dyspnea"], type:"single", explain:"Airway always priority."},
+
+// CASE STYLE
+{q:"Patient with COPD and high CO2 likely has?", options:["Resp acidosis","Resp alkalosis","Met alkalosis","Normal"], a:["Resp acidosis"], type:"single"}
+];
+
+let mode=""; let current=0; let score=0; let time=20; let timerInterval;
+
+function startMode(m){
+mode=m; document.getElementById('menu').classList.add('hidden');
+if(m==='flash'){ startFlash(); } else { document.getElementById('quiz').classList.remove('hidden'); loadQuestion(); }
+}
+
+function loadQuestion(){
+clearInterval(timerInterval); time=20; startTimer();
+const q=questions[current];
+document.getElementById('question').innerText=q.q;
+const optDiv=document.getElementById('options'); optDiv.innerHTML="";
+document.getElementById('feedback').innerText="";
+
+q.options.forEach(opt=>{
+let div=document.createElement('div'); div.className='option'; div.innerText=opt;
+div.onclick=()=>selectAnswer(div,opt);
+optDiv.appendChild(div);
+});
+updateProgress();
+}
+
+function selectAnswer(el,opt){
+const q=questions[current];
+if(q.type==='multi'){ el.classList.toggle('correct'); }
+else {
+if(q.a.includes(opt)){ el.classList.add('correct'); score++; }
+else el.classList.add('wrong');
+showExplanation();
+}
+}
+
+function showExplanation(){ if(mode==='study'){ document.getElementById('feedback').innerText=questions[current].explain || ""; }}
+
+function nextQuestion(){ current++; if(current>=questions.length){ endQuiz(); return; } loadQuestion(); }
+
+function endQuiz(){ document.getElementById('question').innerText="Finished!"; document.getElementById('options').innerHTML=""; document.getElementById('feedback').innerText=`Score: ${score}/${questions.length}`; }
+
+function updateProgress(){ document.getElementById('progress').innerText=`Question ${current+1}/${questions.length}`; }
+
+function startTimer(){ timerInterval=setInterval(()=>{ time--; document.getElementById('timer').innerText=`Time: ${time}s`; if(time<=0){ nextQuestion(); } },1000); }
+
+// FLASHCARDS
+let flashIndex=0;
+function startFlash(){ document.getElementById('flash').classList.remove('hidden'); loadFlash(); }
+function loadFlash(){ document.getElementById('flashQ').innerText=questions[flashIndex].q; document.getElementById('flashA').innerText=questions[flashIndex].a.join(', '); document.getElementById('flashA').classList.add('hidden'); }
+function flipCard(){ document.getElementById('flashA').classList.toggle('hidden'); }
+function nextFlash(){ flashIndex++; if(flashIndex>=questions.length) flashIndex=0; loadFlash(); }
+
+</script>
+</body>
+</html>
